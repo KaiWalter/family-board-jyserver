@@ -1,5 +1,16 @@
 # family-board-jyserver
-try jyserver for Family Board
+
+Try [jyserver](https://github.com/ftrias/jyserver) for Family Board.
+
+## hints
+
+activate virtual environment with bash
+
+```sh
+source .venv/bin/activate
+```
+
+from https://docs.python.org/3/library/venv.html
 
 ## issues
 

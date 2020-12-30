@@ -33,6 +33,6 @@ class App(Client):
 
 if __name__ == "__main__":
 
-    httpd = Server(App, verbose=True)
+    httpd = Server(App, ip='0.0.0.0', verbose=False)
     print("serving at port", httpd.port)
     httpd.start()
