@@ -5,31 +5,14 @@ import time
 
 class App(Client):
     def __init__(self):
-        self.running = True
-
-    def reset(self):
-        self.start0 = time.time()
-        self.js.dom.time.innerHTML = "{:.1f}".format(0)
-
-    def start(self):
-        self.running = True
-
-    def stop(self):
-        self.running = False
-        self.js.dom.b2.innerHTML = "Restart"
-        self.js.dom.b2.onclick = self.restart
-
-    def restart(self):
-        self.running = True
-        self.js.dom.b2.innerHTML = "Pause"
-        self.js.dom.b2.onclick = self.stop
+        pass
 
     def main(self):
-        self.start0 = time.time()
         while True:
-            if self.running:
-                self.js.dom.time.innerHTML = "{:.1f}".format(time.time() - self.start0)
-                time.sleep(0.5)
+            self.js.dom.message.innerHTML = "calendar refresh"
+            time.sleep(1)
+            self.js.dom.message.innerHTML = "..."
+            time.sleep(15)
 
 if __name__ == "__main__":
 
