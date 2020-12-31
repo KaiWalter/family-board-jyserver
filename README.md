@@ -1,6 +1,15 @@
 # family-board-jyserver
 
-Try [jyserver](https://github.com/ftrias/jyserver) for Family Board.
+Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspberry Pi Zero W**.
+
+## to do list
+
+- [x] check out lightweight browsers : stay with `chromium` and `matchbox` window manager
+- [ ] implement server logging / tracing
+- [ ] store access or refresh tokens from Microsoft / Google locally on server
+- [ ] update calendar from `jyserver` in browser
+- [ ] update image from `jyserver` in browser
+- [ ] make configuration and token handling generic
 
 ## hints
 
@@ -22,12 +31,13 @@ helper with PowerShell
 Get-Process python | ?{$_.CommandLine -match "server.py$"} | Stop-Process -Force
 ```
 
-## check for other ideas
+create `startAsJob.ps1` for local (Win10) testing
 
-https://dominik.debastiani.ch/2019/01/18/raspberry-pi-als-kiosk-pc-mit-browser/
-https://www.raspberrypi.org/forums/viewtopic.php?t=40860
+### Kweb as alternate browser
 
-## Kweb needs Py2 as default
+> rendering capabilities not compatible or sufficient for family board
+
+### Kweb needs Py2 as default
 
 https://linuxconfig.org/how-to-change-from-default-to-alternative-python-version-on-debian-linux
 
@@ -37,3 +47,17 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
 update-alternatives --list python
 update-alternatives --config python
 ```
+
+### epiphany as alternate browser
+
+> was not able to get `epiphany-browser` working in application mode / with no titlebar etc.
+
+> `jyserver` to browser communication was not working reliably
+
+> `jyserver` + `epiphany-browser` was too resource intensive allowing almost no SSHing
+
+## check for other ideas
+
+https://dominik.debastiani.ch/2019/01/18/raspberry-pi-als-kiosk-pc-mit-browser/
+https://www.raspberrypi.org/forums/viewtopic.php?t=40860
+
