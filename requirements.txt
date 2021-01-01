@@ -1,2 +1,4 @@
 Flask
+flask-session
 jyserver
+msal
