@@ -5,7 +5,8 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 ## to do list
 
 - [x] check out lightweight browsers : stay with `chromium` and `matchbox` window manager
-- [ ] implement server logging / tracing
+- [x] implement server logging / tracing
+- [ ] check how `jyserver` handles external POST / GET for receiving tokens etc.
 - [ ] store access or refresh tokens from Microsoft / Google locally on server
 - [ ] update calendar from `jyserver` in browser
 - [ ] update image from `jyserver` in browser

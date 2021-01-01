@@ -1,5 +1,5 @@
 
-$j = Start-Job -ScriptBlock { python ./server.py }
+$j = Start-Job -ScriptBlock { python ./server.py -o family-board.log -a 0.0.0.0 -p 8080 }
 
 Start-Sleep -Seconds 1
 
