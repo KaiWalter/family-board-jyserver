@@ -17,9 +17,10 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 - https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
 - select `Applications from personal account`
 - new registration
-- Only associate with personal account
+- click `Only associate with personal account`
+- enter name
+- select `Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)`
 - enter redirect URL - e.g. for local development & testing: http://localhost:8080/msatoken
-- select AzureADandPersonalMicrosoftAccount
 
 
 
