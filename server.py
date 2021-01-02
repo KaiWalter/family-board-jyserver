@@ -2,9 +2,8 @@
 
 import argparse
 import logging
-import sys
-import time
 import os
+import sys
 
 import jyserver.Flask as jsf
 import msal
@@ -12,7 +11,9 @@ import requests
 from flask import Flask, redirect, render_template, request, session, url_for
 
 import app_config
-from flask_session import Session  # https://pythonhosted.org/Flask-Session
+import board
+from authentication import AuthenticationHandler
+from flask_session import Session
 
 app = Flask(__name__)
 app.config.from_object(app_config)
@@ -26,15 +27,7 @@ class App:
 
     @jsf.task
     def main(self):
-        while True:
-            try:
-                self.js.dom.message.innerHTML = "calendar refresh"
-                time.sleep(1)
-                self.js.dom.message.innerHTML = "..."
-                time.sleep(15)
-            except:
-                pass
-
+        board.main_loop(self)
 
 
 @app.route('/')
@@ -47,7 +40,7 @@ def index():
 def login():
     # Technically we could use empty list [] as scopes to do just sign in,
     # here we choose to also collect end user consent upfront
-    session["flow"] = _build_auth_code_flow(scopes=app_config.SCOPE)
+    session["flow"] = authentication_handler.build_auth_code_flow()
     return render_template("login.html", auth_url=session["flow"]["auth_uri"], version=msal.__version__)
 
 
@@ -55,13 +48,12 @@ def login():
 @app.route(app_config.REDIRECT_PATH)
 def authorized():
     try:
-        cache = _load_cache()
-        result = _build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
+        cache = authentication_handler.load_cache()
+        result = authentication_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
             session.get("flow", {}), request.args)
         if "error" in result:
             return render_template("error.html", result=result)
-        session["user"] = result.get("id_token_claims")
-        _save_cache(cache)
+        authentication_handler.save_cache(cache)
     except ValueError:  # Usually caused by CSRF
         pass  # Simply ignore them
     return redirect(url_for("graphcall"))
@@ -77,46 +69,14 @@ def logout():
 
 @app.route("/graphcall")
 def graphcall():
-    token = _get_token_from_cache(app_config.SCOPE)
+    token = authentication_handler.get_token_from_cache()
     if not token:
         return redirect(url_for("login"))
     graph_data = requests.get(  # Use token to call downstream service
         app_config.ENDPOINT,
-        headers={'Authorization': 'Bearer ' + token['access_token']},
+        headers={'Authorization': f'{token["token_type"]} {token["access_token"]}'}
     ).json()
     return render_template('display.html', result=graph_data)
-
-
-def _load_cache():
-    cache = msal.SerializableTokenCache()
-    if os.path.exists(args.cachefile):
-        cache.deserialize(open(args.cachefile, "r").read())
-    return cache
-
-def _save_cache(cache):
-    open(args.cachefile, "w").write(cache.serialize())
-
-
-def _build_msal_app(cache=None, authority=None):
-    return msal.ConfidentialClientApplication(
-        app_config.CLIENT_ID, authority=authority or app_config.AUTHORITY,
-        client_credential=app_config.CLIENT_SECRET, token_cache=cache)
-
-
-def _build_auth_code_flow(authority=None, scopes=None):
-    return _build_msal_app(authority=authority).initiate_auth_code_flow(
-        scopes or [],
-        redirect_uri=url_for("authorized", _external=True))
-
-
-def _get_token_from_cache(scope=None):
-    cache = _load_cache()  # This web app maintains one cache per session
-    cca = _build_msal_app(cache=cache)
-    accounts = cca.get_accounts()
-    if accounts:  # So all account(s) belong to the current signed-in user
-        result = cca.acquire_token_silent(scope, account=accounts[0])
-        _save_cache(cache)
-        return result
 
 
 def parse_args():
@@ -134,21 +94,27 @@ def parse_args():
 
     return args
 
-def print_info(message:str):
+
+def print_info(message: str):
     print(message)
     logging.info(message)
 
-app.jinja_env.globals.update(_build_auth_code_flow=_build_auth_code_flow)  # Used in template
 
 if __name__ == "__main__":
 
     if app_config.CLIENT_ID and app_config.CLIENT_SECRET and app_config.AUTHORITY:
 
-        # configure
+        # configuration
         args = parse_args()
 
         logging.basicConfig(
-            filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+            filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+        authentication_handler = AuthenticationHandler(
+            app_config=app_config, cachefile=args.cachefile)
+
+        app.jinja_env.globals.update(
+            _build_auth_code_flow=authentication_handler.build_auth_code_flow)  # Used in template
 
         # main process
         print_info(f'hosting on http://{args.address}:{args.port}')
