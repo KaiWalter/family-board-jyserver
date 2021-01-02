@@ -26,10 +26,14 @@ class App:
     @jsf.task
     def main(self):
         while True:
-            self.js.dom.message.innerHTML = "calendar refresh"
-            time.sleep(1)
-            self.js.dom.message.innerHTML = "..."
-            time.sleep(15)
+            try:
+                self.js.dom.message.innerHTML = "calendar refresh"
+                time.sleep(1)
+                self.js.dom.message.innerHTML = "..."
+                time.sleep(15)
+            except:
+                pass
+
 
 
 @app.route('/')
@@ -122,7 +126,7 @@ def parse_args():
     parser.add_argument('-o', '--logfile', required=False,
                         dest='logfile', help='Name of log file.', type=str, default='server.log')
     parser.add_argument('-a', '--ip', required=False,
-                        dest='address', help='IP address to host on.', type=str, default='0.0.0.0')
+                        dest='address', help='IP address to host on.', type=str, default='127.0.0.1')
     parser.add_argument('-p', '--port', required=False,
                         dest='port', help='Port to host on.', type=int, default=8080)
     args = parser.parse_args()
@@ -146,7 +150,7 @@ if __name__ == "__main__":
             filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 
         # main process
-        print_info(f'serving at on address {args.address} port {args.port}')
+        print_info(f'hosting on http://{args.address}:{args.port}')
         app.run(host=args.address, port=args.port)
 
     else:

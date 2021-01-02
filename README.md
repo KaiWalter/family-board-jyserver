@@ -73,3 +73,7 @@ update-alternatives --config python
 https://dominik.debastiani.ch/2019/01/18/raspberry-pi-als-kiosk-pc-mit-browser/
 https://www.raspberrypi.org/forums/viewtopic.php?t=40860
 
+
+---
+
+Any questions? [@ancientitguy](https://twitter.com/ancientitguy)
