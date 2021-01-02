@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Family Board</title>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="3600">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="board">
+
+        <div id="imageContainer" style="height:100%; position:relative; overflow: hidden;">
+            <div class="clock">
+            </div>
+            <div style="height:5%; position:absolute; bottom:0px;"><span class="imageCreated"></span> </div>
+        </div>
+
+        <div class="main">
+            <div class="calendar">
+            </div>
+            <div class="message">
+                <span id="message"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            startTime();
+
+            function startTime() {
+                var today = new Date();
+                var h = today.getHours().toString().padStart(2, "0");
+                var m = today.getMinutes().toString().padStart(2, "0");
+                var s = today.getSeconds().toString().padStart(2, "0");
+                $(".clock").html(h + ":" + m + "<span class='sec'>" + s + "</span>");
+                var t = setTimeout(startTime, 500);
+            }
+        });
+    </script>
+
+</body>
+
+</html>

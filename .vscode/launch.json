@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Server",
+            "type": "python",
+            "request": "launch",
+            "program": "server.py",
+            "console": "integratedTerminal",
+            "args": [
+                "-p",
+                "8080"
+            ],
+            "env": {
+                "CLIENT_ID": "...",
+                "CLIENT_SECRET": "...",
+                "AUTHORITY": "..."
+            }
+        }
+    ]
+}

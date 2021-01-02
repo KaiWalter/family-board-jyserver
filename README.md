@@ -6,11 +6,23 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 
 - [x] check out lightweight browsers : stay with `chromium` and `matchbox` window manager
 - [x] implement server logging / tracing
-- [ ] check how `jyserver` handles external POST / GET for receiving tokens etc.
-- [ ] store access or refresh tokens from Microsoft / Google locally on server
+- [x] check how `jyserver` handles external POST / GET for receiving tokens etc. : not directly possible; added `Flask`
+- [x] store access or refresh tokens from Microsoft / Google locally on server : https://github.com/Azure-Samples/ms-identity-python-webapp
 - [ ] update calendar from `jyserver` in browser
 - [ ] update image from `jyserver` in browser
 - [ ] make configuration and token handling generic
+
+## configure Outlook / Live calendar access
+
+- https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
+- select `Applications from personal account`
+- new registration
+- click `Only associate with personal account`
+- enter name
+- select `Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)`
+- enter redirect URL - e.g. for local development & testing: http://localhost:8080/msatoken
+
+
 
 ## hints
 
@@ -62,3 +74,7 @@ update-alternatives --config python
 https://dominik.debastiani.ch/2019/01/18/raspberry-pi-als-kiosk-pc-mit-browser/
 https://www.raspberrypi.org/forums/viewtopic.php?t=40860
 
+
+---
+
+Any questions? [@ancientitguy](https://twitter.com/ancientitguy)
