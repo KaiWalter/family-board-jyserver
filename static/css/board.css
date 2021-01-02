@@ -34,7 +34,7 @@
     font-size: 0.8em;
 }
 
-.calendar {
+#calendar {
     display: grid;
     grid-template-columns: 1fr repeat(7, 3fr);
     grid-template-rows: repeat(3, 1fr);

@@ -24,4 +24,8 @@ ENDPOINT = 'https://graph.microsoft.com/v1.0/me/calendars'  # This resource requ
 # https://docs.microsoft.com/en-us/graph/permissions-reference
 SCOPE = ["Calendars.Read","Files.Read.All"]
 
+CALENDAR_PATTERN="^(Calendar|Birthdays)"
+
 SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in server-side session
+
+CACHE_FILE = "server_cache.bin"
