@@ -4,6 +4,7 @@ import argparse
 import logging
 import sys
 import time
+import os
 
 import jyserver.Flask as jsf
 import msal
@@ -88,14 +89,12 @@ def graphcall():
 
 def _load_cache():
     cache = msal.SerializableTokenCache()
-    if session.get("token_cache"):
-        cache.deserialize(session["token_cache"])
+    if os.path.exists(args.cachefile):
+        cache.deserialize(open(args.cachefile, "r").read())
     return cache
 
-
 def _save_cache(cache):
-    if cache.has_state_changed:
-        session["token_cache"] = cache.serialize()
+    open(args.cachefile, "w").write(cache.serialize())
 
 
 def _build_msal_app(cache=None, authority=None):
@@ -123,6 +122,8 @@ def _get_token_from_cache(scope=None):
 def parse_args():
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--cachefile', required=False,
+                        dest='cachefile', help='Name of cache file.', type=str, default='server_cache.bin')
     parser.add_argument('-o', '--logfile', required=False,
                         dest='logfile', help='Name of log file.', type=str, default='server.log')
     parser.add_argument('-a', '--ip', required=False,
