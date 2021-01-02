@@ -21,8 +21,11 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 - enter name
 - select `Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)`
 - enter redirect URL - e.g. for local development & testing: http://localhost:8080/msatoken
+- add API permissions `Microsoft.Graph / delegated`
+  * Calendars.Read.Shared
+  * Files.Read.All
 
-
+---
 
 ## hints
 
@@ -33,6 +36,8 @@ source .venv/bin/activate
 ```
 
 from https://docs.python.org/3/library/venv.html
+
+---
 
 ## issues
 

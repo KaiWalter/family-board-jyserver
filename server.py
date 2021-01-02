@@ -63,7 +63,7 @@ def authorized():
         _save_cache(cache)
     except ValueError:  # Usually caused by CSRF
         pass  # Simply ignore them
-    return redirect(url_for("index"))
+    return redirect(url_for("graphcall"))
 
 
 @app.route("/logout")

@@ -22,6 +22,6 @@ ENDPOINT = 'https://graph.microsoft.com/v1.0/me/calendars'  # This resource requ
 
 # You can find the proper permission names from this document
 # https://docs.microsoft.com/en-us/graph/permissions-reference
-SCOPE = ["Calendars.Read.Shared","Files.Read.All"]
+SCOPE = ["Calendars.Read","Files.Read.All"]
 
 SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in server-side session
