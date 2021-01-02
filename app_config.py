@@ -29,3 +29,5 @@ CALENDAR_PATTERN="^(Calendar|Birthdays)"
 SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in server-side session
 
 CACHE_FILE = "server_cache.bin"
+
+LOCALE = 'en_US.utf8'

@@ -1,6 +1,7 @@
 #!/usr/env/bin python3
 
 import argparse
+import locale
 import logging
 import os
 import sys
@@ -13,8 +14,8 @@ from flask_injector import FlaskInjector
 from injector import inject
 
 import app_config
-from board import Board
 from authentication import AuthenticationHandler
+from board import Board
 from dependencies import configure
 from flask_session import Session
 
@@ -115,8 +116,7 @@ if __name__ == "__main__":
         logging.basicConfig(
             filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-        # app.jinja_env.globals.update(
-        #     _build_auth_code_flow=authentication_handler.build_auth_code_flow)  # Used in template
+        locale.setlocale(locale.LC_ALL, app_config.LOCALE)
 
         FlaskInjector(app=app, modules=[configure])
 
