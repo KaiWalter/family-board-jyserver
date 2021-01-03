@@ -6,6 +6,7 @@ from datetime import date, timedelta
 import dateutil.parser
 from injector import inject
 
+from german_public_holidays import GermanPublicHolidays
 from microsoft_graph_calendar import MicrosoftGraphCalendar
 from microsoft_graph_images import MicrosoftGraphImages
 
@@ -13,10 +14,11 @@ from microsoft_graph_images import MicrosoftGraphImages
 class Board:
 
     @inject
-    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages):
+    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages, public_holidays: GermanPublicHolidays):
 
         self.graph_calendar = graph_calendar
         self.graph_images = graph_images
+        self.public_holidays = public_holidays
         self.calendar_weeks = 3
 
     def main_loop(self, app):
@@ -90,6 +92,9 @@ class Board:
 
         results = self.graph_calendar.query_calendar(
             start=start_date, end=end_date)
+
+        results.extend(self.public_holidays.query(
+            start=start_date, end=end_date))
 
         return results
 
