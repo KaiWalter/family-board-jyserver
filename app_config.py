@@ -28,4 +28,6 @@ SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in ser
 
 CACHE_FILE = "server_cache.bin"
 
-LOCALE = 'en_US.utf8'
+LOCALE = os.getenv("LOCALE")
+if not LOCALE:
+    LOCALE = 'en_US.utf8'
