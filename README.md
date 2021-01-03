@@ -1,6 +1,6 @@
 # family-board-jyserver
 
-Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspberry Pi Zero W**.
+Use [jyserver](https://github.com/ftrias/jyserver) and [Flask](https://palletsprojects.com/p/flask/) for Family Board on **Raspberry Pi Zero W**.
 
 ## to do list
 
@@ -8,9 +8,23 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 - [x] implement server logging / tracing
 - [x] check how `jyserver` handles external POST / GET for receiving tokens etc. : not directly possible; added `Flask`
 - [x] store access or refresh tokens from Microsoft / Google locally on server : https://github.com/Azure-Samples/ms-identity-python-webapp
-- [ ] update calendar from `jyserver` in browser
-- [ ] update image from `jyserver` in browser
+- [x] update calendar from `jyserver` in browser
+- [x] update image from `jyserver` in browser
 - [ ] make configuration and token handling generic
+
+## configure locale
+
+before using a locale in environment variable `LOCALE` it needs to be setup on Linux / Raspbian / Codespaces
+
+```sh
+sudo locale-gen de_DE.UTF-8
+```
+
+now `LOCALE` can be set
+
+```sh
+export LOCALE=de_DE.utf8
+```
 
 ## configure Outlook / Live calendar access
 
@@ -22,7 +36,7 @@ Try [jyserver](https://github.com/ftrias/jyserver) for Family Board on **Raspber
 - select `Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)`
 - enter redirect URL - e.g. for local development & testing: http://localhost:8080/msatoken
 - add API permissions `Microsoft.Graph / delegated`
-  * Calendars.Read.Shared
+  * Calendars.Read
   * Files.Read.All
 
 ---
@@ -40,16 +54,6 @@ from https://docs.python.org/3/library/venv.html
 ---
 
 ## issues
-
-### not able to stop server process
-
-helper with PowerShell
-
-```PowerShell
-Get-Process python | ?{$_.CommandLine -match "server.py$"} | Stop-Process -Force
-```
-
-create `startAsJob.ps1` for local (Win10) testing
 
 ### Kweb as alternate browser
 
