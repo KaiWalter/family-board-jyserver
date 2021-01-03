@@ -1,6 +1,6 @@
 import logging
 import re
-from datetime import date, timedelta
+from datetime import timedelta
 
 import dateutil.parser
 from injector import inject
@@ -51,12 +51,13 @@ class MicrosoftGraphCalendar:
                         current = dateutil.parser.isoparse(
                             entry['start']['dateTime'])
                         end = dateutil.parser.isoparse(
-                            entry['start']['dateTime'])
-                        while current <= end:
-                            calendar_entry['Date'] = current.strftime(
+                            entry['end']['dateTime'])
+                        while current < end:
+                            calendar_entry_instance = calendar_entry.copy()
+                            calendar_entry_instance['Date'] = current.strftime(
                                 '%Y-%m-%d')
                             current = current + timedelta(days=1)
-                            results.append(calendar_entry)
+                            results.append(calendar_entry_instance)
                     else:
                         calendar_entry['Time'] = entry['start']['dateTime'][11:16]
                         results.append(calendar_entry)

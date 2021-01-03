@@ -2,10 +2,12 @@ from injector import Scope, singleton
 
 from authentication import AuthenticationHandler
 from board import Board
+from german_public_holidays import GermanPublicHolidays
+from german_school_holidays import GermanSchoolHolidays
 from microsoft_graph import MicrosoftGraph
 from microsoft_graph_calendar import MicrosoftGraphCalendar
 from microsoft_graph_images import MicrosoftGraphImages
-from german_public_holidays import GermanPublicHolidays
+
 
 def configure(binder):
     binder.bind(AuthenticationHandler, to=AuthenticationHandler, scope=singleton)
@@ -14,3 +16,4 @@ def configure(binder):
     binder.bind(MicrosoftGraphCalendar, to=MicrosoftGraphCalendar, scope=singleton)
     binder.bind(MicrosoftGraphImages, to=MicrosoftGraphImages, scope=singleton)
     binder.bind(GermanPublicHolidays, to=GermanPublicHolidays, scope=singleton)
+    binder.bind(GermanSchoolHolidays, to=GermanSchoolHolidays, scope=singleton)

@@ -32,6 +32,7 @@
     color: white;
     margin-left: 10px;
     font-size: 0.8em;
+    z-index: 12;
 }
 
 #calendar {

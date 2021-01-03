@@ -7,6 +7,7 @@ import dateutil.parser
 from injector import inject
 
 from german_public_holidays import GermanPublicHolidays
+from german_school_holidays import GermanSchoolHolidays
 from microsoft_graph_calendar import MicrosoftGraphCalendar
 from microsoft_graph_images import MicrosoftGraphImages
 
@@ -14,28 +15,20 @@ from microsoft_graph_images import MicrosoftGraphImages
 class Board:
 
     @inject
-    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages, public_holidays: GermanPublicHolidays):
+    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages, public_holidays: GermanPublicHolidays, school_holidays: GermanSchoolHolidays):
 
         self.graph_calendar = graph_calendar
         self.graph_images = graph_images
         self.public_holidays = public_holidays
+        self.school_holidays = school_holidays
         self.calendar_weeks = 3
 
     def main_loop(self, app):
 
-        next_image_update_cycle = 0
         next_calendar_update_cycle = 0
+        next_image_update_cycle = 0
 
         while True:
-
-            if next_image_update_cycle == 0:
-                next_image_update_cycle = 3
-                try:
-                    self.__update_image(app)
-                except Exception as Argument:
-                    logging.exception("update_image")
-            else:
-                next_image_update_cycle -= 1
 
             if next_calendar_update_cycle == 0:
                 next_calendar_update_cycle = 7
@@ -45,6 +38,15 @@ class Board:
                     logging.exception("update_calendar")
             else:
                 next_calendar_update_cycle -= 1
+
+            if next_image_update_cycle == 0:
+                next_image_update_cycle = 3
+                try:
+                    self.__update_image(app)
+                except Exception as Argument:
+                    logging.exception("update_image")
+            else:
+                next_image_update_cycle -= 1
 
             app.js.dom.message.innerHTML = ""
             time.sleep(15)
@@ -94,6 +96,9 @@ class Board:
             start=start_date, end=end_date)
 
         results.extend(self.public_holidays.query(
+            start=start_date, end=end_date))
+
+        results.extend(self.school_holidays.query(
             start=start_date, end=end_date))
 
         return results
