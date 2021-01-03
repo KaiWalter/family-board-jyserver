@@ -91,13 +91,15 @@ class Board:
 
         _, start_date, _, end_date = self.__get_start_end_date()
 
-        results = self.graph_calendar.query_calendar(
-            start=start_date, end=end_date)
+        results = []
+
+        results.extend(self.school_holidays.query(
+            start=start_date, end=end_date))
 
         results.extend(self.public_holidays.query(
             start=start_date, end=end_date))
 
-        results.extend(self.school_holidays.query(
+        results.extend(self.graph_calendar.query_calendar(
             start=start_date, end=end_date))
 
         return results
@@ -124,6 +126,8 @@ class Board:
                 month_title = current_day.strftime("%b")
             else:
                 month_title = ""
+
+            day_class = 'today' if date.today() == current_day else 'day'
 
             day_title = "<span class='monthofyear'>" + month_title + "</span><br/>"
             day_title += "<span class='dayofweek'>" + \
@@ -155,6 +159,6 @@ class Board:
                         calendar_entry['Time'] + "&nbsp;" + \
                         calendar_entry['Description'] + "</div>"
 
-            html += f"<div id='day{i}' class='day'><div id='dayHeader'><div class='day_title'>{day_title}</div></div><div id='dayContent'>{day_content}</div></div>"
+            html += f"<div id='day{i}' class='{day_class}'><div id='dayHeader'><div class='day_title'>{day_title}</div></div><div id='dayContent'>{day_content}</div></div>"
 
         app.js.dom.calendar.innerHTML = html
