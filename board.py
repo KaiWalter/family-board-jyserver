@@ -84,8 +84,7 @@ class Board:
                         photo['takenDateTime']).strftime('%b %Y')
 
             app.js.dom.image.src = download_url
-            time.sleep(0.5)
-            app.js.dom.imageCreated.innerHTML = image_created
+            app.js.dom.image.alt = image_created
 
     def __query_calendars(self):
         results = []
