@@ -1,10 +1,11 @@
 import logging
 import re
 import time
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
+import dateutil.parser
 
 import requests
-from injector import inject
+from injector import InstanceProvider, inject
 
 import app_config
 from authentication import AuthenticationHandler
@@ -31,10 +32,13 @@ class Board:
             time.sleep(15)
 
     def query_graph(self, endpoint, token):
-        return requests.get(  # Use token to call downstream service
-            endpoint,
-            headers={
-                'Authorization': f'{token["token_type"]} {token["access_token"]}'})
+
+        headers = {
+            'Authorization': f'{token["token_type"]} {token["access_token"]}',
+            'Prefer': f'outlook.timezone="{app_config.CALENDAR_TIMEZONE}"'
+        }
+
+        return requests.get(endpoint, headers=headers)
 
     def __get_start_end_date(self):
         date_format = "%Y-%m-%d"
@@ -56,9 +60,11 @@ class Board:
         pattern = re.compile(app_config.CALENDAR_PATTERN)
 
         calendars = self.query_graph(
-            app_config.ENDPOINT, self.token).json()['value']
+            app_config.ENDPOINT, self.token).json()
 
-        for calendar in calendars:
+        isPrimary = True
+
+        for calendar in calendars['value']:
 
             if pattern.match(calendar['name']):
                 logging.info('query calendar %s', calendar['name'])
@@ -67,7 +73,29 @@ class Board:
                     f"{app_config.ENDPOINT}/{calendar['id']}/calendarView?startDateTime={start_date}&endDateTime={end_date}&$select=subject,isAllDay,start,end", self.token).json()['value']
 
                 for entry in calendar_entries:
-                    results.append(entry)
+                    calendar_entry = {
+                        'Description': entry['subject'],
+                        'Date': entry['start']['dateTime'][0:10],
+                        'Time': None,
+                        'IsPrimary': isPrimary,
+                        'AllDayEvent': entry['isAllDay'],
+                        'SchoolHoliday': False,
+                        'PublicHoliday': False
+                    }
+
+                    if entry['isAllDay']:
+                        current = dateutil.parser.isoparse(entry['start']['dateTime'])
+                        end = dateutil.parser.isoparse(entry['start']['dateTime'])
+                        while current <= end:
+                            calendar_entry['Date'] = current.strftime('%Y-%m-%d')
+                            current = current + timedelta(days=1)
+                            results.append(calendar_entry)
+                    else:
+                        calendar_entry['Time'] = entry['start']['dateTime'][11:16]
+                        results.append(calendar_entry)
+
+                    if isPrimary:
+                        isPrimary = False
 
         return results
 
@@ -80,7 +108,8 @@ class Board:
             app.js.dom.calendar.innerHTML = "token not valid"
             return
 
-        results = self.__query_calendars()
+        calendar_entries = sorted(self.__query_calendars(),
+                         key=lambda k: (k['Date'], k['Time']))
 
         start, _, end, _ = self.__get_start_end_date()
 
@@ -88,10 +117,11 @@ class Board:
 
         for i in range(0, (self.calendar_weeks*7)):
             current_day = start + timedelta(days=i)
+            current_day_compare = current_day.strftime('%Y-%m-%d')
             wd = current_day.weekday()
 
-            if wd == 0: # generate week number
-                html += f"<div class='week_title'><span class='weekofyear'>{current_day.isocalendar()[1]}</span></div>"
+            if wd == 0:  # generate week number
+                html += f"<div class='week_title'><br/><span class='weekofyear'>{current_day.isocalendar()[1]}</span></div>"
 
             if i == 0 or current_day.day == 1:
                 month_title = current_day.strftime("%b")
@@ -99,12 +129,29 @@ class Board:
                 month_title = ""
 
             day_title = "<span class='monthofyear'>" + month_title + "</span><br/>"
-            day_title += "<span class='dayofweek'>" + current_day.strftime("%a") + "</span>&nbsp;"
-            day_title += "<span class='dayofmonth'>" + current_day.strftime("%d") + "</span>"
+            day_title += "<span class='dayofweek'>" + \
+                current_day.strftime("%a") + "</span>&nbsp;"
+            day_title += "<span class='dayofmonth'>" + \
+                current_day.strftime("%d") + "</span>"
 
             day_content = ""
 
+            # render all day events on top
+            for calendar_entry in calendar_entries:
+                if calendar_entry['Date'] == current_day_compare and calendar_entry['AllDayEvent']:
+                    if calendar_entry['PublicHoliday']:
+                        day_content += "<div class='public_holiday_day'>" + calendar_entry['Description'] + "</div>"
+                    elif calendar_entry['SchoolHoliday']:
+                        day_content += "<div class='school_holiday_day'>" + calendar_entry['Description'] + "</div>"
+                    else:
+                        ext_class = 'primary_calendar' if calendar_entry['IsPrimary'] else 'secondary_calendar'
+                        day_content += f"<div class='all_day {ext_class}'>" + calendar_entry['Description'] + "</div>"
+
+            # render other events below
+            for calendar_entry in calendar_entries:
+                if calendar_entry['Date'] == current_day_compare and not calendar_entry['AllDayEvent']:
+                    day_content += "<div class='single_event primary_calendar'>" + calendar_entry['Time'] + "&nbsp;" + calendar_entry['Description'] + "</div>"
+
             html += f"<div id='day{i}' class='day'><div id='dayHeader'><div class='day_title'>{day_title}</div></div><div id='dayContent'>{day_content}</div></div>"
-           
 
         app.js.dom.calendar.innerHTML = html

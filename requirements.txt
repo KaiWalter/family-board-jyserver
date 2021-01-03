@@ -3,3 +3,4 @@ flask-session
 flask-injector
 jyserver
 msal
+python-dateutil
