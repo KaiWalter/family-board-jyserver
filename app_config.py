@@ -16,12 +16,9 @@ REDIRECT_PATH = "/msatoken"  # Used for forming an absolute URL to your redirect
                               # The absolute URL must match the redirect URI you set
                               # in the app's registration in the Azure portal.
 
-# You can find more Microsoft Graph API endpoints from Graph Explorer
-# https://developer.microsoft.com/en-us/graph/graph-explorer
-ENDPOINT = 'https://graph.microsoft.com/v1.0/me/calendars'  # This resource requires no admin consent
+ENDPOINT_CALENDAR = 'https://graph.microsoft.com/v1.0/me/calendars'
+ENDPOINT_IMAGES = 'https://graph.microsoft.com/v1.0/me/drive/root:/FamilyCalendarImages:/children?$top=999'
 
-# You can find the proper permission names from this document
-# https://docs.microsoft.com/en-us/graph/permissions-reference
 SCOPE = ["Calendars.Read","Files.Read.All"]
 
 CALENDAR_PATTERN="^(us|Calendar)"

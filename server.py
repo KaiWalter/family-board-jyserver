@@ -30,19 +30,20 @@ class App:
         pass
 
     @jsf.task
-    def main(self, board:Board):
+    def main(self, board: Board):
         board.main_loop(self)
+
 
 @inject
 @app.route('/')
-def index(board:Board):
+def index(board: Board):
     App.main(board)
     return App.render(render_template('index.html'))
 
 
 @inject
 @app.route("/login")
-def login(authentication_handler:AuthenticationHandler):
+def login(authentication_handler: AuthenticationHandler):
     # Technically we could use empty list [] as scopes to do just sign in,
     # here we choose to also collect end user consent upfront
     session["flow"] = authentication_handler.build_auth_code_flow()
@@ -52,7 +53,7 @@ def login(authentication_handler:AuthenticationHandler):
 # Its absolute URL must match your app's redirect_uri set in AAD
 @inject
 @app.route(app_config.REDIRECT_PATH)
-def authorized(authentication_handler:AuthenticationHandler):
+def authorized(authentication_handler: AuthenticationHandler):
     try:
         cache = authentication_handler.load_cache()
         result = authentication_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
@@ -76,13 +77,14 @@ def logout():
 
 @inject
 @app.route("/graphcall")
-def graphcall(authentication_handler:AuthenticationHandler):
+def graphcall(authentication_handler: AuthenticationHandler):
     token = authentication_handler.get_token_from_cache()
     if not token:
         return redirect(url_for("login"))
     graph_data = requests.get(  # Use token to call downstream service
         app_config.ENDPOINT,
-        headers={'Authorization': f'{token["token_type"]} {token["access_token"]}'}
+        headers={
+            'Authorization': f'{token["token_type"]} {token["access_token"]}'}
     ).json()
     return render_template('display.html', result=graph_data)
 

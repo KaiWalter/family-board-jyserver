@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +22,7 @@
         <div id="imageContainer" style="height:100%; position:relative; overflow: hidden;">
             <div class="clock">
             </div>
-            <div style="height:5%; position:absolute; bottom:0px;"><span class="imageCreated"></span> </div>
+            <div style="height:5%; position:absolute; bottom:0px;"><span id="imageCreated" class="imageCreated"></span></div>
         </div>
 
         <div class="main">
@@ -35,10 +34,15 @@
         </div>
 
     </div>
+    <div style="display:none;visibility:hidden;">
+        <img id="image" />
+    </div>
 
     <script type="text/javascript">
         $(document).ready(function () {
             startTime();
+
+            var previousImageUrl = $("#image").attr("src")
 
             function startTime() {
                 var today = new Date();
@@ -47,6 +51,17 @@
                 var s = today.getSeconds().toString().padStart(2, "0");
                 $(".clock").html(h + ":" + m + "<span class='sec'>" + s + "</span>");
                 var t = setTimeout(startTime, 500);
+                imageUrl = $("#image").attr("src");
+                if (imageUrl != previousImageUrl) {
+                    $("#imageContainer").css({
+                        background: "#000 url(" + imageUrl + ") center center",
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat"
+                    });
+                    $(".imageCreated").html(imageCreated);
+
+                    previousImageUrl = imageUrl;
+                }
             }
         });
     </script>
