@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
 </head>
 
@@ -18,10 +17,12 @@
 
     <div class="board">
 
-        <div id="imageContainer" style="height:100%; position:relative; overflow: hidden;">
+        <div id="imageContainer">
             <div class="clock">
             </div>
-            <div style="height:5%; position:absolute; bottom:0px;"><span id="imageCreated" class="imageCreated"></span></div>
+            <div style="height:5%; position:absolute; bottom:0px;">
+                <span id="imageCreated"></span>
+            </div>
         </div>
 
         <div class="main">
@@ -40,7 +41,7 @@
     </div>
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             startTime();
 
             function startTime() {
@@ -55,10 +56,10 @@
 
         function updateImage() {
             $("#imageContainer").css({
-                        background: "#000 url(" + $("#image").attr("src") + ") center center",
-                        backgroundSize: "cover",
-                        backgroundRepeat: "no-repeat"
-                    });
+                background: "#000 url(" + $("#image").attr("src") + ") center center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat"
+            });
         }
     </script>
 

@@ -10,6 +10,12 @@
     grid-template-rows: auto 30px;
 }
 
+#imageContainer {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
 .clock {
     color: white;
     font-size: 500%;
@@ -28,7 +34,7 @@
     top: -1em;
 }
 
-.imageCreated {
+#imageCreated {
     color: white;
     margin-left: 10px;
     font-size: 0.8em;
