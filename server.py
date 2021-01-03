@@ -98,6 +98,12 @@ def parse_args():
                         dest='address', help='IP address to host on.', type=str, default='127.0.0.1')
     parser.add_argument('-p', '--port', required=False,
                         dest='port', help='Port to host on.', type=int, default=8080)
+    parser.add_argument(
+        '-d', '--debug',
+        help="Print lots of debugging statements",
+        action="store_const", dest="loglevel", const=logging.DEBUG,
+        default=logging.WARNING,
+    )
     args = parser.parse_args()
 
     return args
@@ -116,7 +122,7 @@ if __name__ == "__main__":
         args = parse_args()
 
         logging.basicConfig(
-            filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+            filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=args.loglevel)
 
         locale.setlocale(locale.LC_ALL, app_config.LOCALE)
 

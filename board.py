@@ -22,20 +22,32 @@ class Board:
         self.calendar_weeks = 3
 
     def main_loop(self, app):
+
+        next_image_update_cycle = 0
+        next_calendar_update_cycle = 0
+
         while True:
 
-            try:
-                self.update_image(app)
-            except Exception as Argument:
-                logging.exception("update_image")
+            if next_image_update_cycle == 0:
+                next_image_update_cycle = 3
+                try:
+                    self.update_image(app)
+                except Exception as Argument:
+                    logging.exception("update_image")
+            else:
+                next_image_update_cycle -= 1
 
-            try:
-                self.update_calendar(app)
-            except Exception as Argument:
-                logging.exception("update_calendar")
+            if next_calendar_update_cycle == 0:
+                next_calendar_update_cycle = 7
+                try:
+                    self.update_calendar(app)
+                except Exception as Argument:
+                    logging.exception("update_calendar")
+            else:
+                next_calendar_update_cycle -= 1
 
             app.js.dom.message.innerHTML = ""
-            time.sleep(60)
+            time.sleep(15)
 
     def query_graph(self, endpoint, token):
 
