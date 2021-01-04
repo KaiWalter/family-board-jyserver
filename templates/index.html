@@ -17,11 +17,12 @@
 
     <div class="board">
 
-        <div id="imageContainer">
-            <div class="clock">
-            </div>
-            <div style="height:5%; position:absolute; bottom:0px;">
-                <span id="imageCreated"></span>
+        <div class="imageContainer">
+            <div class="imageOverlay">
+                <div class="clock">
+                </div>
+                <div class="imageCreated">
+                </div>
             </div>
         </div>
 
@@ -55,12 +56,12 @@
         });
 
         function updateImage() {
-            $("#imageContainer").css({
+            $(".imageContainer").css({
                 background: "#000 url(" + $("#image").attr("src") + ") center center",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat"
             });
-            $("#imageCreated").html($("#image").attr("alt"))
+            $(".imageCreated").html($("#image").attr("alt"))
         }
     </script>
 

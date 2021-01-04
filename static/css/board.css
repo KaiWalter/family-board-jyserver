@@ -1,4 +1,7 @@
 .board {
+    position: absolute;
+    top: 0px;
+    left: 0px;
     display: grid;
     grid-template-columns: 100fr 161fr;
     height: 100vh;
@@ -10,20 +13,25 @@
     grid-template-rows: auto 30px;
 }
 
-#imageContainer {
-    height: 100%;
-    position: relative;
+.imageContainer {
     overflow: hidden;
+    z-index: 1;
+}
+
+.imageOverlay {
+    z-index: 2;
+    top: 0px;
+    left: 0px;
+    height: 100%;
 }
 
 .clock {
-    color: white;
-    font-size: 500%;
     margin-top: 30px;
     width: 100%;
+    color: white;
+    font-size: 500%;
     text-align: right;
     text-shadow: 2px 2px 2px #333;
-    z-index: 12;
 }
 
 .clock .sec {
@@ -34,11 +42,13 @@
     top: -1em;
 }
 
-#imageCreated {
+.imageCreated {
+    left: 30px;
+    position: absolute;
+    bottom: 0;
+    height: 5%;
     color: white;
-    margin-left: 10px;
     font-size: 0.8em;
-    z-index: 12;
 }
 
 #calendar {
