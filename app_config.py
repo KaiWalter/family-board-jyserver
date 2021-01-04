@@ -22,6 +22,10 @@ MSG_CALENDAR_PATTERN = os.getenv("MSG_CALENDAR_PATTERN") or "^(Calendar|Birthday
 MSG_CALENDAR_TIMEZONE = os.getenv("MSG_CALENDAR_TIMEZONE") or "UTC"
 MSG_LOCALE = os.getenv("MSG_LOCALE") or 'en_US.utf8'
 
+# setting specific for German Holiday calendars
+
+GERMAN_STATE = "BW"
+
 # Flask cache settings
 
 SESSION_TYPE = "filesystem"

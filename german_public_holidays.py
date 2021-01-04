@@ -1,6 +1,6 @@
-import logging
-
 import requests
+
+import app_config
 
 
 class GermanPublicHolidays:
@@ -12,6 +12,7 @@ class GermanPublicHolidays:
 
         results = self.__query_for_year(start[0:4])
 
+        # when spanning 2 years get both holiday calendars
         if start[0:4] != end[0:4]:
             results.extend(self.__query_for_year(end[0:4]))
 
@@ -19,7 +20,7 @@ class GermanPublicHolidays:
 
     def __query_for_year(self, year):
 
-        url = f"https://feiertage-api.de/api/?nur_land=BW&jahr={year}"
+        url = f"https://feiertage-api.de/api/?nur_land={app_config.GERMAN_STATE}&jahr={year}"
 
         results = requests.get(url).json()
 
