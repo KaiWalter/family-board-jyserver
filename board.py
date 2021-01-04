@@ -22,34 +22,42 @@ class Board:
         self.public_holidays = public_holidays
         self.school_holidays = school_holidays
         self.calendar_weeks = 3
+        self.next_calendar_update_cycle = 0
+        self.next_image_update_cycle = 0
+        self.__message = ""
 
     def main_loop(self, app):
 
-        next_calendar_update_cycle = 0
-        next_image_update_cycle = 0
-
         while True:
 
-            if next_calendar_update_cycle == 0:
-                next_calendar_update_cycle = 7
+            if self.next_calendar_update_cycle == 0:
+                self.next_calendar_update_cycle = 7
                 try:
                     self.__update_calendar(app)
                 except Exception as Argument:
                     logging.exception("update_calendar")
             else:
-                next_calendar_update_cycle -= 1
+                self.next_calendar_update_cycle -= 1
 
-            if next_image_update_cycle == 0:
-                next_image_update_cycle = 3
+            if self.next_image_update_cycle == 0:
+                self.next_image_update_cycle = 3
                 try:
                     self.__update_image(app)
                 except Exception as Argument:
                     logging.exception("update_image")
             else:
-                next_image_update_cycle -= 1
+                self.next_image_update_cycle -= 1
 
-            app.js.dom.message.innerHTML = ""
+            app.js.dom.message.innerHTML = self.__message
             time.sleep(15)
+
+    def refresh(self):
+        self.next_calendar_update_cycle = 0
+        self.next_image_update_cycle = 0
+
+    def set_message(self, message):
+        self.__message = message
+        self.refresh()
 
     def __get_start_end_date(self):
         date_format = "%Y-%m-%d"

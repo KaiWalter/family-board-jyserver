@@ -1,15 +1,15 @@
 #!/usr/env/bin python3
 
 import argparse
+import json
 import locale
 import logging
-import os
 import sys
 
 import jyserver.Flask as jsf
 import msal
 import requests
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for, jsonify
 from flask_injector import FlaskInjector
 from injector import inject
 
@@ -39,6 +39,22 @@ class App:
 def index(board: Board):
     App.main(board)
     return App.render(render_template('index.html'))
+
+
+@app.route('/api/board/refresh', methods=['POST'])
+def refresh_board(board: Board):
+    board.refresh()
+    result = {'status': 'Ok'}
+    return jsonify(result)
+
+
+@app.route('/api/board/message', methods=['PUT'])
+def put_board_message(board: Board):
+    payload = request.get_json()
+    if 'message' in payload:
+        board.set_message(payload['message'])
+    result = {'status': 'Ok'}
+    return jsonify(result)
 
 
 @inject
