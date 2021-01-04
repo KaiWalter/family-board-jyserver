@@ -9,15 +9,16 @@ import sys
 import jyserver.Flask as jsf
 import msal
 import requests
-from flask import Flask, redirect, render_template, request, session, url_for, jsonify
+from flask import (Flask, jsonify, redirect, render_template, request, session,
+                   url_for)
 from flask_injector import FlaskInjector
 from injector import inject
 
 import app_config
-from authentication import AuthenticationHandler
 from board import Board
 from dependencies import configure
 from flask_session import Session
+from microsoft_graph_authentication import AuthenticationHandler
 
 app = Flask(__name__)
 app.config.from_object(app_config)
@@ -68,7 +69,7 @@ def login(authentication_handler: AuthenticationHandler):
 
 # Its absolute URL must match your app's redirect_uri set in AAD
 @inject
-@app.route(app_config.REDIRECT_PATH)
+@app.route(app_config.MSG_REDIRECT_PATH)
 def authorized(authentication_handler: AuthenticationHandler):
     try:
         cache = authentication_handler.load_cache()
@@ -87,7 +88,7 @@ def authorized(authentication_handler: AuthenticationHandler):
 def logout():
     session.clear()  # Wipe out user and its token cache from session
     return redirect(  # Also logout from your tenant's web session
-        app_config.AUTHORITY + "/oauth2/v2.0/logout" +
+        app_config.MSG_AUTHORITY + "/oauth2/v2.0/logout" +
         "?post_logout_redirect_uri=" + url_for("index", _external=True))
 
 
@@ -132,7 +133,7 @@ def print_info(message: str):
 
 if __name__ == "__main__":
 
-    if app_config.CLIENT_ID and app_config.CLIENT_SECRET and app_config.AUTHORITY:
+    if app_config.MSG_CLIENT_ID and app_config.MSG_CLIENT_SECRET and app_config.MSG_AUTHORITY:
 
         # configuration
         args = parse_args()
@@ -140,7 +141,7 @@ if __name__ == "__main__":
         logging.basicConfig(
             filename=args.logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=args.loglevel)
 
-        locale.setlocale(locale.LC_ALL, app_config.LOCALE)
+        locale.setlocale(locale.LC_ALL, app_config.MSG_LOCALE)
 
         FlaskInjector(app=app, modules=[configure])
 

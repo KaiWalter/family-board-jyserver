@@ -4,7 +4,7 @@ import requests
 from injector import inject
 
 import app_config
-from authentication import AuthenticationHandler
+from microsoft_graph_authentication import AuthenticationHandler
 
 
 class MicrosoftGraph:

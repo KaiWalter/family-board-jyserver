@@ -20,9 +20,9 @@ class MicrosoftGraphCalendar:
 
         results = []
 
-        pattern = re.compile(app_config.CALENDAR_PATTERN)
+        pattern = re.compile(app_config.MSG_CALENDAR_PATTERN)
 
-        calendars = self.graph.query(app_config.ENDPOINT_CALENDAR).json()
+        calendars = self.graph.query(app_config.MSG_ENDPOINT_CALENDAR).json()
 
         isPrimary = True
 
@@ -31,10 +31,10 @@ class MicrosoftGraphCalendar:
             if pattern.match(calendar['name']):
                 logging.info('query calendar %s', calendar['name'])
 
-                url = f"{app_config.ENDPOINT_CALENDAR}/{calendar['id']}/calendarView?startDateTime={start}&endDateTime={end}&$select=subject,isAllDay,start,end"
+                url = f"{app_config.MSG_ENDPOINT_CALENDAR}/{calendar['id']}/calendarView?startDateTime={start}&endDateTime={end}&$select=subject,isAllDay,start,end"
 
                 calendar_entries = self.graph.query(url, additional_headers={
-                                                    'Prefer': f'outlook.timezone="{app_config.CALENDAR_TIMEZONE}"'}).json()['value']
+                                                    'Prefer': f'outlook.timezone="{app_config.MSG_CALENDAR_TIMEZONE}"'}).json()['value']
 
                 for entry in calendar_entries:
                     calendar_entry = {

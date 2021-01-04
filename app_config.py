@@ -1,26 +1,28 @@
 import os
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-if not CLIENT_ID:
+# setting specific for MS Graph (Calendar + OneDrive)
+
+MSG_CLIENT_ID = os.getenv("MSG_CLIENT_ID")
+if not MSG_CLIENT_ID:
     raise ValueError("Need to define CLIENT_ID environment variable")
 
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-if not CLIENT_SECRET:
+MSG_CLIENT_SECRET = os.getenv("MSG_CLIENT_SECRET")
+if not MSG_CLIENT_SECRET:
     raise ValueError("Need to define CLIENT_SECRET environment variable")
 
-AUTHORITY = os.getenv("AUTHORITY")
-if not AUTHORITY:
+MSG_AUTHORITY = os.getenv("MSG_AUTHORITY")
+if not MSG_AUTHORITY:
     raise ValueError("Need to define AUTHORITY environment variable")
 
-REDIRECT_PATH = "/msatoken"
-ENDPOINT_CALENDAR = 'https://graph.microsoft.com/v1.0/me/calendars'
-ENDPOINT_IMAGES = 'https://graph.microsoft.com/v1.0/me/drive/root:/FamilyCalendarImages:/children?$top=999'
+MSG_REDIRECT_PATH = "/msatoken"
+MSG_ENDPOINT_CALENDAR = 'https://graph.microsoft.com/v1.0/me/calendars'
+MSG_ENDPOINT_IMAGES = 'https://graph.microsoft.com/v1.0/me/drive/root:/FamilyCalendarImages:/children?$top=999'
+MSG_SCOPE = ["Calendars.Read", "Files.Read.All"]
+MSG_CALENDAR_PATTERN = os.getenv("MSG_CALENDAR_PATTERN") or "^(Calendar|Birthdays)$"
+MSG_CALENDAR_TIMEZONE = os.getenv("MSG_CALENDAR_TIMEZONE") or "UTC"
+MSG_LOCALE = os.getenv("MSG_LOCALE") or 'en_US.utf8'
 
-SCOPE = ["Calendars.Read", "Files.Read.All"]
+# Flask cache settings
 
 SESSION_TYPE = "filesystem"
 CACHE_FILE = "server_cache.bin"
-
-CALENDAR_PATTERN = os.getenv("CALENDAR_PATTERN") or "^(Calendar|Birthdays)$"
-CALENDAR_TIMEZONE = os.getenv("CALENDAR_TIMEZONE") or "UTC"
-LOCALE = os.getenv("LOCALE") or 'en_US.utf8'

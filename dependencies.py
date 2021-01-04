@@ -1,10 +1,10 @@
 from injector import Scope, singleton
 
-from authentication import AuthenticationHandler
 from board import Board
 from german_public_holidays import GermanPublicHolidays
 from german_school_holidays import GermanSchoolHolidays
 from microsoft_graph import MicrosoftGraph
+from microsoft_graph_authentication import AuthenticationHandler
 from microsoft_graph_calendar import MicrosoftGraphCalendar
 from microsoft_graph_images import MicrosoftGraphImages
 

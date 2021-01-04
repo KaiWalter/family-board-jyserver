@@ -22,12 +22,12 @@ class AuthenticationHandler:
 
     def build_msal_app(self, cache=None):
         return msal.ConfidentialClientApplication(
-            app_config.CLIENT_ID, authority=app_config.AUTHORITY,
-            client_credential=app_config.CLIENT_SECRET, token_cache=cache)
+            app_config.MSG_CLIENT_ID, authority=app_config.MSG_AUTHORITY,
+            client_credential=app_config.MSG_CLIENT_SECRET, token_cache=cache)
 
     def build_auth_code_flow(self):
         return self.build_msal_app().initiate_auth_code_flow(
-            app_config.SCOPE or [],
+            app_config.MSG_SCOPE or [],
             redirect_uri=url_for("authorized", _external=True))
 
     def get_token_from_cache(self):
@@ -36,6 +36,6 @@ class AuthenticationHandler:
         accounts = cca.get_accounts()
         if accounts:  # So all account(s) belong to the current signed-in user
             result = cca.acquire_token_silent(
-                scopes=app_config.SCOPE, account=accounts[0])
+                scopes=app_config.MSG_SCOPE, account=accounts[0])
             self.save_cache(cache)
             return result

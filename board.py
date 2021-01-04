@@ -48,7 +48,11 @@ class Board:
             else:
                 self.next_image_update_cycle -= 1
 
-            app.js.dom.message.innerHTML = self.__message
+            try:
+                app.js.dom.message.innerHTML = self.__message
+            except Exception as Argument:
+                logging.exception("update_message")
+
             time.sleep(15)
 
     def refresh(self):

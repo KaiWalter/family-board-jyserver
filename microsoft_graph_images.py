@@ -14,6 +14,6 @@ class MicrosoftGraphImages:
         self.graph = graph
 
     def query_images(self):
-        images = self.graph.query(app_config.ENDPOINT_IMAGES).json()
+        images = self.graph.query(app_config.MSG_ENDPOINT_IMAGES).json()
 
         return images

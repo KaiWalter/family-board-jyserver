@@ -39,6 +39,24 @@ export LOCALE=de_DE.utf8
   * Calendars.Read
   * Files.Read.All
 
+## API access
+
+### refresh board
+
+trigger a refresh for the board (image + calendar) with the next cycle
+
+```PowerShell
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/board/refresh
+```
+
+### place a message
+
+place a message that will be displayed with the next cycle; also invokes a refresh
+
+```PowerShell
+Invoke-RestMethod -Method Put -Uri http://localhost:8080/api/board/message -ContentType "application/json" -body '{"message":"Hello, world!"}'
+```
+
 ---
 
 ## hints
