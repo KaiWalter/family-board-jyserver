@@ -1,32 +1,8 @@
-# family-board-jyserver
+# Family Board - in Python with JyServer and Flask
 
 Use [jyserver](https://github.com/ftrias/jyserver) and [Flask](https://palletsprojects.com/p/flask/) for Family Board on **Raspberry Pi Zero W**.
 
-## to do list
-
-- [x] check out lightweight browsers : stay with `chromium` and `matchbox` window manager
-- [x] implement server logging / tracing
-- [x] check how `jyserver` handles external POST / GET for receiving tokens etc. : not directly possible; added `Flask`
-- [x] store access or refresh tokens from Microsoft / Google locally on server : https://github.com/Azure-Samples/ms-identity-python-webapp
-- [x] update calendar from `jyserver` in browser
-- [x] update image from `jyserver` in browser
-- [ ] make configuration and token handling generic
-
-## configure locale
-
-before using a locale in environment variable `LOCALE` it needs to be setup on Linux / Raspbian / Codespaces
-
-```sh
-sudo locale-gen de_DE.UTF-8
-```
-
-now `LOCALE` can be set
-
-```sh
-export LOCALE=de_DE.utf8
-```
-
-## configure Outlook / Live calendar access
+## configure Microsoft Graph / Outlook / Live calendar access
 
 - https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
 - select `Applications from personal account`
@@ -34,10 +10,32 @@ export LOCALE=de_DE.utf8
 - click `Only associate with personal account`
 - enter name
 - select `Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)`
-- enter redirect URL - e.g. for local development & testing: http://localhost:8080/msatoken
+- enter redirect URL - e.g. for local development & testing: http://localhost:8080/msgtoken
 - add API permissions `Microsoft.Graph / delegated`
   * Calendars.Read
   * Files.Read.All
+- create a script and set environment variables before starting `server.py`
+  * MSG_CLIENT_ID
+  * MSG_CLIENT_SECRET
+  * MSG_AUTHORITY
+- optionally set
+  * MSG_CALENDAR_PATTERN : a Regex pattern selecting the names of calendars the above application has access to / can be checked with `/v1.0/me/calendars` in [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
+- when started login to MS account with http://localhost:8080/login
+- a token that will be refreshed automatically is then stored on servers filesystem - `CACHE_FILE` application configuration setting
+
+### configure locale
+
+To show calendar events with local month and day designations, a locale can be set. Before using a locale in environment variable `MSG_LOCALE` it needs to be setup on Linux / Raspbian / Codespaces
+
+```sh
+sudo locale-gen de_DE.UTF-8
+```
+
+now `MSG_LOCALE` can be set (in the script which starts `server.py`)
+
+```sh
+export MSG_LOCALE=de_DE.utf8
+```
 
 ## API access
 

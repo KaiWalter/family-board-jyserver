@@ -14,7 +14,7 @@ MSG_AUTHORITY = os.getenv("MSG_AUTHORITY")
 if not MSG_AUTHORITY:
     raise ValueError("Need to define AUTHORITY environment variable")
 
-MSG_REDIRECT_PATH = "/msatoken"
+MSG_REDIRECT_PATH = "/msgtoken"
 MSG_ENDPOINT_CALENDAR = 'https://graph.microsoft.com/v1.0/me/calendars'
 MSG_ENDPOINT_IMAGES = 'https://graph.microsoft.com/v1.0/me/drive/root:/FamilyCalendarImages:/children?$top=999'
 MSG_SCOPE = ["Calendars.Read", "Files.Read.All"]

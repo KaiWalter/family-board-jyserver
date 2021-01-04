@@ -80,7 +80,7 @@ def authorized(authentication_handler: AuthenticationHandler):
         authentication_handler.save_cache(cache)
     except ValueError:  # Usually caused by CSRF
         pass  # Simply ignore them
-    return redirect(url_for("graphcall"))
+    return redirect(url_for("index"))
 
 
 @inject
@@ -90,20 +90,6 @@ def logout():
     return redirect(  # Also logout from your tenant's web session
         app_config.MSG_AUTHORITY + "/oauth2/v2.0/logout" +
         "?post_logout_redirect_uri=" + url_for("index", _external=True))
-
-
-@inject
-@app.route("/graphcall")
-def graphcall(authentication_handler: AuthenticationHandler):
-    token = authentication_handler.get_token_from_cache()
-    if not token:
-        return redirect(url_for("login"))
-    graph_data = requests.get(  # Use token to call downstream service
-        app_config.ENDPOINT,
-        headers={
-            'Authorization': f'{token["token_type"]} {token["access_token"]}'}
-    ).json()
-    return render_template('display.html', result=graph_data)
 
 
 def parse_args():
