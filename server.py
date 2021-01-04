@@ -8,7 +8,6 @@ import sys
 
 import jyserver.Flask as jsf
 import msal
-import requests
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 from flask_injector import FlaskInjector
@@ -18,7 +17,7 @@ import app_config
 from board import Board
 from dependencies import configure
 from flask_session import Session
-from microsoft_graph_authentication import AuthenticationHandler
+from microsoft_graph import MicrosoftGraphAuthentication
 
 app = Flask(__name__)
 app.config.from_object(app_config)
@@ -60,7 +59,7 @@ def put_board_message(board: Board):
 
 @inject
 @app.route("/login")
-def login(authentication_handler: AuthenticationHandler):
+def login(authentication_handler: MicrosoftGraphAuthentication):
     # Technically we could use empty list [] as scopes to do just sign in,
     # here we choose to also collect end user consent upfront
     session["flow"] = authentication_handler.build_auth_code_flow()
@@ -70,7 +69,7 @@ def login(authentication_handler: AuthenticationHandler):
 # Its absolute URL must match your app's redirect_uri set in AAD
 @inject
 @app.route(app_config.MSG_REDIRECT_PATH)
-def authorized(authentication_handler: AuthenticationHandler):
+def authorized(authentication_handler: MicrosoftGraphAuthentication):
     try:
         cache = authentication_handler.load_cache()
         result = authentication_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
