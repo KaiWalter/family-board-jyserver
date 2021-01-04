@@ -4,13 +4,13 @@ import requests
 from injector import inject
 
 import app_config
-from microsoft_graph_authentication import AuthenticationHandler
+from microsoft_graph import MicrosoftGraphAuthentication
 
 
 class MicrosoftGraph:
 
     @inject
-    def __init__(self, authentication_handler: AuthenticationHandler):
+    def __init__(self, authentication_handler: MicrosoftGraphAuthentication):
 
         self.authentication_handler = authentication_handler
 

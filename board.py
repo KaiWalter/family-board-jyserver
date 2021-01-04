@@ -6,10 +6,8 @@ from datetime import date, timedelta
 import dateutil.parser
 from injector import inject
 
-from german_public_holidays import GermanPublicHolidays
-from german_school_holidays import GermanSchoolHolidays
-from microsoft_graph_calendar import MicrosoftGraphCalendar
-from microsoft_graph_images import MicrosoftGraphImages
+from german_holidays import GermanPublicHolidays, GermanSchoolHolidays
+from microsoft_graph import MicrosoftGraphImages, MicrosoftGraphCalendar
 
 
 class Board:

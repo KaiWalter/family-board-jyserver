@@ -6,7 +6,7 @@ from flask import url_for
 import app_config
 
 
-class AuthenticationHandler:
+class MicrosoftGraphAuthentication:
 
     def __init__(self):
         pass
