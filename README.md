@@ -23,6 +23,8 @@ Use [jyserver](https://github.com/ftrias/jyserver) and [Flask](https://palletspr
 - when started login to MS account with http://localhost:8080/login
 - a token that will be refreshed automatically is then stored on servers filesystem - `CACHE_FILE` application configuration setting
 
+> after putting sensitive values in `.vscode/launch.json` it makes sense to exclude this file from __git commit__ with `git update-index --assume-unchanged .vscode/launch.json`
+
 ### configure locale
 
 To show calendar events with local month and day designations, a locale can be set. Before using a locale in environment variable `MSG_LOCALE` it needs to be setup on Linux / Raspbian / Codespaces
