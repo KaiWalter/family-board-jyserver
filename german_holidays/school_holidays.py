@@ -1,10 +1,10 @@
 from datetime import timedelta
 from types import prepare_class
 
+import app_config
 import dateutil.parser
 import requests
-
-import app_config
+from models import SchoolHolidayDayCalendarEntry
 
 
 class GermanSchoolHolidays:
@@ -25,7 +25,7 @@ class GermanSchoolHolidays:
             previous_year = str(int(start[0:4])-1)
             results.extend(self.__query_for_year(previous_year))
 
-        return [r for r in results if r['Date'] >= start and r['Date'] <= end]
+        return [r for r in results if r.date >= start and r.date <= end]
 
     def __query_for_year(self, year):
 
@@ -36,20 +36,10 @@ class GermanSchoolHolidays:
         calendar_entries = []
 
         for result in results:
-            calendar_entry = {
-                'Description': str(result['name']).capitalize(),
-                'Time': None,
-                'AllDayEvent': True,
-                'SchoolHoliday': True,
-                'PublicHoliday': False
-            }
-
             current = dateutil.parser.isoparse(result['start'])
             end = dateutil.parser.isoparse(result['end'])
             while current <= end:
-                calendar_entry_instance = calendar_entry.copy()
-                calendar_entry_instance['Date'] = current.strftime('%Y-%m-%d')
+                calendar_entries.append(SchoolHolidayDayCalendarEntry(description=str(result['name']).capitalize(), date=current.strftime('%Y-%m-%d')))
                 current = current + timedelta(days=1)
-                calendar_entries.append(calendar_entry_instance)
 
         return calendar_entries

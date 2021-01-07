@@ -118,7 +118,7 @@ class Board:
         app.js.dom.message.innerHTML = "calendar refresh"
 
         calendar_entries = sorted(self.__query_calendars(),
-                                  key=lambda k: (k['Date'], k['Time']))
+                                  key=lambda k: (k.date, k.time))
 
         start, _, end, _ = self.__get_start_end_date()
 
@@ -149,25 +149,24 @@ class Board:
 
             # render all day events on top
             for calendar_entry in calendar_entries:
-                if calendar_entry['Date'] == current_day_compare and calendar_entry['AllDayEvent']:
-                    if calendar_entry['PublicHoliday']:
+                if calendar_entry.date == current_day_compare and calendar_entry.all_day:
+                    if calendar_entry.public_holiday:
                         day_content += "<div class='public_holiday_day'>" + \
-                            calendar_entry['Description'] + "</div>"
-                    elif calendar_entry['SchoolHoliday']:
+                            calendar_entry.description + "</div>"
+                    elif calendar_entry.school_holiday:
                         day_content += "<div class='school_holiday_day'>" + \
-                            calendar_entry['Description'] + "</div>"
+                            calendar_entry.description + "</div>"
                     else:
-                        ext_class = 'primary_calendar' if calendar_entry[
-                            'IsPrimary'] else 'secondary_calendar'
+                        ext_class = 'primary_calendar' if calendar_entry.is_primary else 'secondary_calendar'
                         day_content += f"<div class='all_day {ext_class}'>" + \
-                            calendar_entry['Description'] + "</div>"
+                            calendar_entry.description + "</div>"
 
             # render other events below
             for calendar_entry in calendar_entries:
-                if calendar_entry['Date'] == current_day_compare and not calendar_entry['AllDayEvent']:
+                if calendar_entry.date == current_day_compare and not calendar_entry.all_day:
                     day_content += "<div class='single_event primary_calendar'>" + \
-                        calendar_entry['Time'] + "&nbsp;" + \
-                        calendar_entry['Description'] + "</div>"
+                        calendar_entry.time + "&nbsp;" + \
+                        calendar_entry.description + "</div>"
 
             html += f"<div id='day{i}' class='{day_class}'><div id='dayHeader'><div class='day_title'>{day_title}</div></div><div id='dayContent'>{day_content}</div></div>"
 

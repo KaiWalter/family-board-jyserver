@@ -2,10 +2,11 @@ import logging
 import re
 from datetime import timedelta
 
+import app_config
 import dateutil.parser
 from injector import inject
+from models import AllDayCalendarEntry, CalendarEntry
 
-import app_config
 from microsoft_graph import MicrosoftGraph
 
 
@@ -24,7 +25,7 @@ class MicrosoftGraphCalendar:
 
         calendars = self.graph.query(app_config.MSG_ENDPOINT_CALENDAR).json()
 
-        isPrimary = True
+        is_primary = True
 
         for calendar in calendars['value']:
 
@@ -37,32 +38,19 @@ class MicrosoftGraphCalendar:
                                                     'Prefer': f'outlook.timezone="{app_config.MSG_CALENDAR_TIMEZONE}"'}).json()['value']
 
                 for entry in calendar_entries:
-                    calendar_entry = {
-                        'Description': entry['subject'],
-                        'Date': entry['start']['dateTime'][0:10],
-                        'Time': None,
-                        'IsPrimary': isPrimary,
-                        'AllDayEvent': entry['isAllDay'],
-                        'SchoolHoliday': False,
-                        'PublicHoliday': False
-                    }
-
                     if entry['isAllDay']:
                         current = dateutil.parser.isoparse(
                             entry['start']['dateTime'])
                         end = dateutil.parser.isoparse(
                             entry['end']['dateTime'])
                         while current < end:
-                            calendar_entry_instance = calendar_entry.copy()
-                            calendar_entry_instance['Date'] = current.strftime(
-                                '%Y-%m-%d')
+                            results.append(AllDayCalendarEntry(description=entry['subject'], date=current.strftime(
+                                '%Y-%m-%d'), is_primary=is_primary))
                             current = current + timedelta(days=1)
-                            results.append(calendar_entry_instance)
                     else:
-                        calendar_entry['Time'] = entry['start']['dateTime'][11:16]
-                        results.append(calendar_entry)
+                        results.append(CalendarEntry(description=entry['subject'], date=entry['start']['dateTime'][0:10], time=entry['start']['dateTime'][11:16], is_primary=is_primary))
 
-                    if isPrimary:
-                        isPrimary = False
+                if is_primary:
+                    is_primary = False
 
         return results
