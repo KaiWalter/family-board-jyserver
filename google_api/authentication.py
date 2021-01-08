@@ -8,7 +8,7 @@ from oauthlib.oauth2 import WebApplicationClient
 from requests.sessions import Request
 
 # from: https://realpython.com/flask-google-login/#creating-your-own-web-application
-
+# from: https://developers.google.com/calendar/quickstart/python
 
 class GoogleAuthenication:
 
@@ -16,7 +16,8 @@ class GoogleAuthenication:
         self.client = WebApplicationClient(app_config.GOOGLE_CLIENT_ID)
 
         if os.path.exists(app_config.GOOGLE_CACHE_FILE):
-            self.client.parse_request_body_response(open(app_config.GOOGLE_CACHE_FILE, "r").read())
+            token_str = open(app_config.GOOGLE_CACHE_FILE, "r").read()
+            self.client.parse_request_body_response(token_str)
 
         self.google_provider_cfg = requests.get(
             app_config.GOOGLE_DISCOVERY_URL).json()

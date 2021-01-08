@@ -1,15 +1,14 @@
 #!/usr/env/bin python3
 
 import argparse
-import json
 import locale
 import logging
+import os
 import sys
 
 import jyserver.Flask as jsf
-import msal
-from flask import (Flask, jsonify, redirect, render_template, request, session,
-                   url_for)
+from flask import (Flask, jsonify, redirect, render_template, request,
+                   send_from_directory, session, url_for)
 from flask_injector import FlaskInjector
 from injector import inject
 
@@ -17,8 +16,8 @@ import app_config
 from board import Board
 from dependencies import configure
 from flask_session import Session
-from microsoft_graph import MicrosoftGraphAuthentication
 from google_api import GoogleAuthenication
+from microsoft_graph import MicrosoftGraphAuthentication
 
 app = Flask(__name__)
 app.config.from_object(app_config)
@@ -40,6 +39,12 @@ class App:
 def index(board: Board):
     App.main(board)
     return App.render(render_template('index.html'))
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/api/board/refresh', methods=['POST'])
@@ -83,11 +88,13 @@ def msg_authorized(msg_auth_handler: MicrosoftGraphAuthentication):
         pass  # Simply ignore them
     return redirect(url_for("index"))
 
+
 @inject
 @app.route(app_config.GOOGLE_REDIRECT_PATH)
 def google_authorized(google_auth_handler: GoogleAuthenication):
     google_auth_handler.create_token(request)
     return redirect(url_for("index"))
+
 
 @inject
 @app.route("/logout")

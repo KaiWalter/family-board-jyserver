@@ -8,15 +8,17 @@ from injector import inject
 
 from german_holidays import GermanPublicHolidays, GermanSchoolHolidays
 from microsoft_graph import MicrosoftGraphImages, MicrosoftGraphCalendar
+from google_api import GoogleCalendar
 
 
 class Board:
 
     @inject
-    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages, public_holidays: GermanPublicHolidays, school_holidays: GermanSchoolHolidays):
+    def __init__(self, graph_calendar: MicrosoftGraphCalendar, graph_images: MicrosoftGraphImages, google_calendar: GoogleCalendar, public_holidays: GermanPublicHolidays, school_holidays: GermanSchoolHolidays):
 
         self.graph_calendar = graph_calendar
         self.graph_images = graph_images
+        self.google_calendar = google_calendar
         self.public_holidays = public_holidays
         self.school_holidays = school_holidays
         self.calendar_weeks = 3
@@ -110,6 +112,9 @@ class Board:
             start=start_date, end=end_date))
 
         results.extend(self.graph_calendar.query_calendar(
+            start=start_date, end=end_date))
+
+        results.extend(self.google_calendar.query_calendar(
             start=start_date, end=end_date))
 
         return results
