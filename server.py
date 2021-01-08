@@ -18,6 +18,7 @@ from board import Board
 from dependencies import configure
 from flask_session import Session
 from microsoft_graph import MicrosoftGraphAuthentication
+from google_api import GoogleAuthenication
 
 app = Flask(__name__)
 app.config.from_object(app_config)
@@ -59,28 +60,34 @@ def put_board_message(board: Board):
 
 @inject
 @app.route("/login")
-def login(authentication_handler: MicrosoftGraphAuthentication):
-    # Technically we could use empty list [] as scopes to do just sign in,
-    # here we choose to also collect end user consent upfront
-    session["flow"] = authentication_handler.build_auth_code_flow()
-    return render_template("login.html", auth_url=session["flow"]["auth_uri"], version=msal.__version__)
+def login(msg_auth_handler: MicrosoftGraphAuthentication, google_auth_handler: GoogleAuthenication):
+    session["flow"] = msg_auth_handler.build_auth_code_flow()
+    msg_auth_url = session["flow"]["auth_uri"]
+
+    google_auth_url = google_auth_handler.endpoint()
+
+    return render_template("login.html", msg_auth_url=msg_auth_url, google_auth_url=google_auth_url)
 
 
-# Its absolute URL must match your app's redirect_uri set in AAD
 @inject
 @app.route(app_config.MSG_REDIRECT_PATH)
-def authorized(authentication_handler: MicrosoftGraphAuthentication):
+def msg_authorized(msg_auth_handler: MicrosoftGraphAuthentication):
     try:
-        cache = authentication_handler.load_cache()
-        result = authentication_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
+        cache = msg_auth_handler.load_cache()
+        result = msg_auth_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
             session.get("flow", {}), request.args)
         if "error" in result:
             return render_template("error.html", result=result)
-        authentication_handler.save_cache(cache)
+        msg_auth_handler.save_cache(cache)
     except ValueError:  # Usually caused by CSRF
         pass  # Simply ignore them
     return redirect(url_for("index"))
 
+@inject
+@app.route(app_config.GOOGLE_REDIRECT_PATH)
+def google_authorized(google_auth_handler: GoogleAuthenication):
+    google_auth_handler.create_token(request)
+    return redirect(url_for("index"))
 
 @inject
 @app.route("/logout")

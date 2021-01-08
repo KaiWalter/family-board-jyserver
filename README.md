@@ -21,9 +21,23 @@ Use [jyserver](https://github.com/ftrias/jyserver) and [Flask](https://palletspr
 - optionally set
   * MSG_CALENDAR_PATTERN : a Regex pattern selecting the names of calendars the above application has access to / can be checked with `/v1.0/me/calendars` in [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
 - when started login to MS account with http://localhost:8080/login
-- a token that will be refreshed automatically is then stored on servers filesystem - `CACHE_FILE` application configuration setting
+- a token that will be refreshed automatically is then stored on servers filesystem - `MSG_CACHE_FILE` application configuration setting
 
 > after putting sensitive values in `.vscode/launch.json` it makes sense to exclude this file from __git commit__ with `git update-index --assume-unchanged .vscode/launch.json`
+
+## configure Google Calendar API
+
+https://developers.google.com/calendar
+
+- Enable the Google Calendar API / create new project name
+- configure OAuth client - Web server
+- redirect URL : http://localhost:8080/googletoken
+- create a script and set environment variables before starting `server.py`
+  * GOOGLE_CLIENT_ID
+  * GOOGLE_CLIENT_SECRET
+- add `export OAUTHLIB_INSECURE_TRANSPORT=1` to allow authentication client w/o https
+- when started login to Google account with http://localhost:8080/login
+- a token that will be refreshed automatically is then stored on servers filesystem - `MSG_CACHE_FILE` application configuration setting
 
 ### configure locale
 

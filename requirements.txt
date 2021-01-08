@@ -1,6 +1,9 @@
 Flask
-flask-session
 flask-injector
+flask-session
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
 jyserver
 msal
 python-dateutil

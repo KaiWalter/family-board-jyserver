@@ -131,4 +131,4 @@ dmypy.json
 
 # project specific
 *.log
-*cache*.bin
+*token*.json
