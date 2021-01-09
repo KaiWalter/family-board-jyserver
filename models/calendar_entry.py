@@ -2,7 +2,7 @@ class BaseCalendarEntry:
     def __init__(self, description:str, date:str, is_primary:bool):
         self.description = description
         self.date = date
-        self.time = None
+        self.time = ""
         self.is_primary = is_primary
         self.all_day = False
         self.public_holiday = False

@@ -1,11 +1,15 @@
-import json
 import os
+import pickle
 
 import app_config
 import requests
 from flask import url_for
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.http import build_http
 from oauthlib.oauth2 import WebApplicationClient
 from requests.sessions import Request
+
+from google_api import ClientConfigBuilder
 
 # from: https://realpython.com/flask-google-login/#creating-your-own-web-application
 # from: https://developers.google.com/calendar/quickstart/python
@@ -16,8 +20,8 @@ class GoogleAuthenication:
         self.client = WebApplicationClient(app_config.GOOGLE_CLIENT_ID)
 
         if os.path.exists(app_config.GOOGLE_CACHE_FILE):
-            token_str = open(app_config.GOOGLE_CACHE_FILE, "r").read()
-            self.client.parse_request_body_response(token_str)
+            with open(app_config.GOOGLE_CACHE_FILE, 'rb') as token:
+                self.creds = pickle.load(token)
 
         self.google_provider_cfg = requests.get(
             app_config.GOOGLE_DISCOVERY_URL).json()
@@ -33,30 +37,32 @@ class GoogleAuthenication:
 
         return request_uri
 
-    def create_token(self, request:Request):
+    def create_token(self, request: Request):
         code = request.args.get("code")
 
-        token_endpoint = self.google_provider_cfg["token_endpoint"]
+        client_config = ClientConfigBuilder(
+            client_type=ClientConfigBuilder.CLIENT_TYPE_WEB,
+            client_id=app_config.GOOGLE_CLIENT_ID,
+            client_secret=app_config.GOOGLE_CLIENT_SECRET,
+            auth_uri=self.google_provider_cfg["authorization_endpoint"],
+            token_uri=self.google_provider_cfg["token_endpoint"])
 
-        token_url, headers, body = self.client.prepare_token_request(
-            token_endpoint,
-            authorization_response=request.url,
-            redirect_url=request.base_url,
-            code=code
-        )
-        token_response = requests.post(
-            token_url,
-            headers=headers,
-            data=body,
-            auth=(app_config.GOOGLE_CLIENT_ID,
-                  app_config.GOOGLE_CLIENT_SECRET),
-        )
+        flow = Flow.from_client_config(
+            client_config=client_config.Build(),
+            scopes=app_config.GOOGLE_SCOPE,
+            redirect_uri=request.base_url)
+        flow.fetch_token(code=code)
 
-        token_str = json.dumps(token_response.json())
+        self.creds = flow.credentials
 
-        self.client.parse_request_body_response(token_str)
+        with open(app_config.GOOGLE_CACHE_FILE, 'wb') as token:
+            pickle.dump(self.creds, token)
 
-        open(app_config.GOOGLE_CACHE_FILE, "w").write(token_str)
+        return
 
-        return 
+    def get_creds(self):
 
+        if self.creds and self.creds.expired and self.creds.refresh_token:
+            self.creds.refresh(Request())
+
+        return self.creds

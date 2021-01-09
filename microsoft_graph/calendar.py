@@ -35,7 +35,7 @@ class MicrosoftGraphCalendar:
                 url = f"{app_config.MSG_ENDPOINT_CALENDAR}/{calendar['id']}/calendarView?startDateTime={start}&endDateTime={end}&$select=subject,isAllDay,start,end"
 
                 calendar_entries = self.graph.query(url, additional_headers={
-                                                    'Prefer': f'outlook.timezone="{app_config.MSG_CALENDAR_TIMEZONE}"'}).json()['value']
+                                                    'Prefer': f'outlook.timezone="{app_config.CALENDAR_TIMEZONE}"'}).json()['value']
 
                 for entry in calendar_entries:
                     if entry['isAllDay']:
