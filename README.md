@@ -75,7 +75,7 @@ Invoke-RestMethod -Method Put -Uri http://localhost:8080/api/board/message -Cont
 
 ## hints
 
-activate virtual environment with bash
+### activate virtual environment with bash
 
 ```sh
 source .venv/bin/activate
@@ -84,6 +84,24 @@ source .venv/bin/activate
 from https://docs.python.org/3/library/venv.html
 
 ---
+
+### add log clean up
+
+```sh
+sudo nano /etc/logrotate.d/family-board
+```
+
+insert:
+```
+/home/pi/family-board-jyserver/family-board.log {
+  rotate 3
+  daily
+  compress
+  missingok
+  notifempty
+}
+```
+
 
 ## issues
 
