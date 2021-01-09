@@ -32,6 +32,7 @@ class GoogleAuthenication:
         request_uri = self.client.prepare_request_uri(
             authorization_endpoint,
             redirect_uri=url_for("google_authorized", _external=True),
+            access_type='offline',
             scope=app_config.GOOGLE_SCOPE
         )
 
@@ -51,6 +52,7 @@ class GoogleAuthenication:
             client_config=client_config.Build(),
             scopes=app_config.GOOGLE_SCOPE,
             redirect_uri=request.base_url)
+
         flow.fetch_token(code=code)
 
         self.creds = flow.credentials
