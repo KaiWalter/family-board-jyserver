@@ -113,6 +113,13 @@ insert:
 
 ## issues
 
+### pip install pybluez
+
+in case of an `error: Microsoft Visual C++ 14.0 or greater is required`
+
+- install with `winget install Microsoft.VisualStudio.BuildTools`
+- modify installation - add C++ build tools - according to https://wiki.python.org/moin/WindowsCompilers
+
 ### Kweb as alternate browser
 
 > rendering capabilities not compatible or sufficient for family board
