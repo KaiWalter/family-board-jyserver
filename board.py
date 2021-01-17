@@ -26,12 +26,13 @@ class Board:
         self.next_image_update_cycle = 0
         self.__message = ""
         self.__status = "waiting for update..."
+        self.__presence = True
 
     def main_loop(self, app):
 
         while True:
 
-            if self.next_calendar_update_cycle == 0:
+            if self.__presence and self.next_calendar_update_cycle == 0:
                 self.next_calendar_update_cycle = 7
                 try:
                     self.__update_calendar(app)
@@ -40,7 +41,7 @@ class Board:
             else:
                 self.next_calendar_update_cycle -= 1
 
-            if self.next_image_update_cycle == 0:
+            if self.__presence and self.next_image_update_cycle == 0:
                 self.next_image_update_cycle = 3
                 try:
                     self.__update_image(app)
@@ -66,7 +67,15 @@ class Board:
         self.refresh()
 
     def set_status(self, status):
+        refresh = self.__status != status
         self.__status = status
+        if status:
+            self.__presence = True
+        else:
+            self.__presence = False
+
+        if refresh:
+            self.refresh()
 
     def __get_start_end_date(self):
         date_format = "%Y-%m-%d"

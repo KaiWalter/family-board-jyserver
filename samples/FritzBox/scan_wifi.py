@@ -32,8 +32,7 @@ if __name__ == '__main__':
         data = {'status': ''}
 
     headers = {'Content-Type': 'application/json'}
-    payload = json.dumps(data)
 
     print(data)
     response = requests.put(
-        'http://localhost:8080/api/board/status', data=data, headers=headers)
+        'http://localhost:8080/api/board/status', data=json.dumps(data), headers=headers)
