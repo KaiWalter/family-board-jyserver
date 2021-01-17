@@ -65,9 +65,7 @@ def put_board_message(board: Board):
 
 @app.route('/api/board/status', methods=['PUT'])
 def put_board_status(board: Board):
-    payload = request.get_json()
-    if 'status' in payload:
-        board.set_status(payload['status'])
+    board.set_status(request.get_json())
     result = {'status': 'Ok'}
     return jsonify(result)
 

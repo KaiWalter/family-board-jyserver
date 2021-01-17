@@ -32,6 +32,11 @@ class Board:
 
         while True:
 
+            try:
+                app.js.dom.status.innerHTML = self.__status
+            except Exception as Argument:
+                logging.exception("update_status")
+
             if self.__presence and self.next_calendar_update_cycle == 0:
                 self.next_calendar_update_cycle = 7
                 try:
@@ -52,7 +57,6 @@ class Board:
 
             try:
                 app.js.dom.message.innerHTML = self.__message
-                app.js.dom.status.innerHTML = self.__status
             except Exception as Argument:
                 logging.exception("update_message")
 
@@ -66,13 +70,14 @@ class Board:
         self.__message = message
         self.refresh()
 
-    def set_status(self, status):
-        refresh = self.__status != status
-        self.__status = status
-        if status:
-            self.__presence = True
-        else:
-            self.__presence = False
+    def set_status(self, payload):
+        status = payload['status']
+        presence = payload['presence']
+
+        refresh = self.__presence != presence
+
+        self.__status = status if status else ''
+        self.__presence = presence
 
         if refresh:
             self.refresh()

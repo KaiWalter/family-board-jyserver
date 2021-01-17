@@ -26,10 +26,14 @@ def hosts():
 if __name__ == '__main__':
     active = hosts()
 
+    data = {
+        'status': '',
+        'presence': False
+    }
+    
     if len(active) > 0:
-        data = {'status': ' | '.join(active)}
-    else:
-        data = {'status': ''}
+        data['status'] = ' | '.join(active)
+        data['presence'] = True
 
     headers = {'Content-Type': 'application/json'}
 
