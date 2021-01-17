@@ -15,12 +15,20 @@
 
 .statusBar {
     display: grid;
-    grid-template-columns: 100fr 100fr;
+    grid-template-columns: 100fr 161fr;
+}
+
+.statusBar #message {
+    background-color: #111111;
+    margin: 2px 2px 2px 2px;
+    padding-left: 10px;
 }
 
 .statusBar #status {
     text-align: right;
-    margin-right: 10px;
+    background-color: #111111;
+    margin: 2px 2px 2px 2px;
+    padding-right: 10px;
 }
 
 .imageContainer {
