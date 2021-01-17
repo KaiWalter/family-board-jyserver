@@ -25,6 +25,7 @@ class Board:
         self.next_calendar_update_cycle = 0
         self.next_image_update_cycle = 0
         self.__message = ""
+        self.__status = "waiting for update..."
 
     def main_loop(self, app):
 
@@ -50,6 +51,7 @@ class Board:
 
             try:
                 app.js.dom.message.innerHTML = self.__message
+                app.js.dom.status.innerHTML = self.__status
             except Exception as Argument:
                 logging.exception("update_message")
 
@@ -62,6 +64,9 @@ class Board:
     def set_message(self, message):
         self.__message = message
         self.refresh()
+
+    def set_status(self, status):
+        self.__status = status
 
     def __get_start_end_date(self):
         date_format = "%Y-%m-%d"

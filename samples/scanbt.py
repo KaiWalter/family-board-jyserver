@@ -21,10 +21,10 @@ for addr, name in nearby_devices:
         active.append(name.encode("utf-8", "replace"))
 
 if len(active) > 0:
-    data = json.dumps({'message':'|'.join(active)})
+    data = json.dumps({'status':' | '.join(active)})
 else:
-    data = json.dumps({'message':''})
+    data = json.dumps({'status':'no devices within range'})
 
 print(data)
 
-response = requests.put('http://localhost:8080/api/board/message', data = data, headers = headers)
+response = requests.put('http://localhost:8080/api/board/status', data = data, headers = headers)

@@ -63,6 +63,15 @@ def put_board_message(board: Board):
     return jsonify(result)
 
 
+@app.route('/api/board/status', methods=['PUT'])
+def put_board_status(board: Board):
+    payload = request.get_json()
+    if 'status' in payload:
+        board.set_status(payload['status'])
+    result = {'status': 'Ok'}
+    return jsonify(result)
+
+
 @inject
 @app.route("/login")
 def login(msg_auth_handler: MicrosoftGraphAuthentication, google_auth_handler: GoogleAuthenication):

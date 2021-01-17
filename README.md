@@ -71,6 +71,14 @@ place a message that will be displayed with the next cycle; also invokes a refre
 Invoke-RestMethod -Method Put -Uri http://localhost:8080/api/board/message -ContentType "application/json" -body '{"message":"Hello, world!"}'
 ```
 
+### place a status
+
+place a status that will be displayed with the next cycle; does not invoke a refresh
+
+```PowerShell
+Invoke-RestMethod -Method Put -Uri http://localhost:8080/api/board/status -ContentType "application/json" -body '{"status":"Family present"}'
+```
+
 ---
 
 ## hints
