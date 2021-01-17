@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import sys
 
 from fritzconnection.lib.fritzhosts import FritzHosts
 
@@ -26,17 +27,17 @@ def hosts():
 if __name__ == '__main__':
     active = hosts()
 
+    presence = len(active) > 0
+
     data = {
-        'status': '',
-        'presence': False
+        'status': ' | '.join(active) if presence else '',
+        'presence': presence
     }
     
-    if len(active) > 0:
-        data['status'] = ' | '.join(active)
-        data['presence'] = True
-
     headers = {'Content-Type': 'application/json'}
 
     print(data)
     response = requests.put(
         'http://localhost:8080/api/board/status', data=json.dumps(data), headers=headers)
+
+    sys.exit(0 if presence else 1)
