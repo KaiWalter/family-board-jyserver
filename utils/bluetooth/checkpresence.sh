@@ -4,7 +4,7 @@ export DISPLAY=:0.0
 
 dp=$(vcgencmd display_power)
 
-presence=$(python3 $(dirname "$0")/scan_wifi.py)
+presence=$(python3 $(dirname "$0")/scan_bt.py)
 
 echo $(date -u --iso-8601=seconds) presence: $presence display: $dp
 

@@ -70,6 +70,12 @@ def put_board_status(board: Board):
     return jsonify(result)
 
 
+@app.route('/api/health', methods=['GET'])
+def get_health():
+    result = {'status': 'Ok'}
+    return jsonify(result)
+
+
 @inject
 @app.route("/login")
 def login(msg_auth_handler: MicrosoftGraphAuthentication, google_auth_handler: GoogleAuthenication):
