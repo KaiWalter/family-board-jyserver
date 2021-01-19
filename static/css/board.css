@@ -22,13 +22,17 @@
 
 .statusBar #message {
     background-color: #111111;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 2px 2px 2px 2px;
 }
 
 .statusBar #status {
     background-color: #111111;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 2px 2px 2px 2px;
 }
 
