@@ -7,5 +7,4 @@ google-auth-oauthlib
 oauth2client
 jyserver
 msal
-pybluez
 python-dateutil

@@ -20,11 +20,20 @@ for addr, name in nearby_devices:
         print("   {} - {}".format(addr, name.encode("utf-8", "replace")))
         active.append(name.encode("utf-8", "replace"))
 
-if len(active) > 0:
-    data = json.dumps({'status':' | '.join(active)})
-else:
-    data = json.dumps({'status':'no devices within range'})
 
-print(data)
+presence = len(active) > 0
 
-response = requests.put('http://localhost:8080/api/board/status', data = data, headers = headers)
+data = {
+    'status': ' | '.join(active) if presence else '',
+    'presence': presence
+}
+
+headers = {'Content-Type': 'application/json'}
+
+try:
+    response = requests.put(
+        'http://localhost:8080/api/board/status', data=json.dumps(data), headers=headers)
+except requests.ConnectionError:
+    pass
+
+print(presence)
