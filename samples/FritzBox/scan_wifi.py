@@ -33,11 +33,13 @@ if __name__ == '__main__':
         'status': ' | '.join(active) if presence else '',
         'presence': presence
     }
-    
+
     headers = {'Content-Type': 'application/json'}
 
-    print(data)
-    response = requests.put(
-        'http://localhost:8080/api/board/status', data=json.dumps(data), headers=headers)
+    try:
+        response = requests.put(
+            'http://localhost:8080/api/board/status', data=json.dumps(data), headers=headers)
+    except requests.ConnectionError:
+        pass
 
-    sys.exit(0 if presence else 1)
+    print(presence)
