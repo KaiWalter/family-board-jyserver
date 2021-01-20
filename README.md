@@ -145,6 +145,7 @@ update-alternatives --config python
 
 ## check for other ideas
 
+https://blog.gordonturner.com/2020/06/30/raspberry-pi-full-screen-browser-2020-05-27-raspios-buster/
 https://dominik.debastiani.ch/2019/01/18/raspberry-pi-als-kiosk-pc-mit-browser/
 https://www.raspberrypi.org/forums/viewtopic.php?t=40860
 
