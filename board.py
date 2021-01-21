@@ -124,17 +124,29 @@ class Board:
 
         results = []
 
-        results.extend(self.school_holidays.query(
-            start=start_date, end=end_date))
+        try:
+            results.extend(self.school_holidays.query(
+                start=start_date, end=end_date))
+        except Exception as Argument:
+            logging.exception("school_holidays")
 
-        results.extend(self.public_holidays.query(
-            start=start_date, end=end_date))
+        try:
+            results.extend(self.public_holidays.query(
+                start=start_date, end=end_date))
+        except Exception as Argument:
+            logging.exception("school_holidays")
 
-        results.extend(self.graph_calendar.query_calendar(
-            start=start_date, end=end_date))
+        try:
+            results.extend(self.graph_calendar.query_calendar(
+                start=start_date, end=end_date))
+        except Exception as Argument:
+            logging.exception("graph_calendar")
 
-        results.extend(self.google_calendar.query_calendar(
-            start=start_date, end=end_date))
+        try:
+            results.extend(self.google_calendar.query_calendar(
+                start=start_date, end=end_date))
+        except Exception as Argument:
+            logging.exception("google_calendar")
 
         return results
 
