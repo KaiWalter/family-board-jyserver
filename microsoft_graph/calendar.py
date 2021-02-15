@@ -41,9 +41,9 @@ class MicrosoftGraphCalendar:
                     if entry['isAllDay']:
                         current = dateutil.parser.isoparse(
                             entry['start']['dateTime'])
-                        end = dateutil.parser.isoparse(
+                        range_end = dateutil.parser.isoparse(
                             entry['end']['dateTime'])
-                        while current < end:
+                        while current < range_end:
                             results.append(AllDayCalendarEntry(description=entry['subject'], date=current.strftime(
                                 '%Y-%m-%d'), is_primary=is_primary))
                             current = current + timedelta(days=1)

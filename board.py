@@ -25,7 +25,7 @@ class Board:
         self.next_calendar_update_cycle = 0
         self.next_image_update_cycle = 0
         self.__message = ""
-        self.__status = "waiting for update..."
+        self.__status = ""
         self.__presence = True
 
     def main_loop(self, app):

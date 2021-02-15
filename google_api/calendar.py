@@ -41,9 +41,9 @@ class GoogleCalendar:
             elif 'date' in event['start'] and 'date' in event['end']:
                 current = dateutil.parser.parse(
                     event['start']['date'])
-                end = dateutil.parser.parse(
+                range_end = dateutil.parser.parse(
                     event['end']['date'])
-                while current < end:
+                while current < range_end:
                     results.append(AllDayCalendarEntry(description=event['summary'], date=current.strftime(
                         '%Y-%m-%d'), is_primary=False))
                     current = current + timedelta(days=1)
