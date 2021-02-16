@@ -63,12 +63,20 @@ trigger a refresh for the board (image + calendar) with the next cycle
 Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/board/refresh
 ```
 
+```shell
+curl -X POST http://localhost:8080/api/board/refresh
+```
+
 ### place a message
 
 place a message that will be displayed with the next cycle; also invokes a refresh
 
 ```PowerShell
 Invoke-RestMethod -Method Put -Uri http://localhost:8080/api/board/message -ContentType "application/json" -body '{"message":"Hello, world!"}'
+```
+
+```shell
+curl -X PUT -d '{"message":"Hello, world!"}' -H "Content-Type: application/json" http://localhost:8080/api/board/message
 ```
 
 ### place a status
@@ -110,6 +118,30 @@ insert:
 }
 ```
 
+## hosting in Docker
+
+create a `.familyboard.vnc` Docker environment variables file which defines:
+
+```env
+CALENDAR_TIMEZONE=Europe/Berlin
+MSG_CLIENT_ID=<Microsoft App Client Id>
+MSG_CLIENT_SECRET=<Microsoft App Client Secret>
+MSG_AUTHORITY=https://login.microsoftonline.com/common
+MSG_LOCALE=de_DE.utf8
+MSG_CALENDAR_PATTERN=^(family|Calendar)$
+GOOGLE_CLIENT_ID=<Google App Client Id>
+GOOGLE_CLIENT_SECRET=<Google App Client Secret>
+OAUTHLIB_INSECURE_TRANSPORT=1
+```
+
+```
+docker build -t familyboard .
+docker run -d --env-file ../.familyboard.env -p 8080:8080 --restart always familyboard
+```
+
+Either with port fowarding or directly login to __Microsoft__ and __Google__ to initialize the __token__ and __pickle__ file in the running container: http://localhost:8080/login
+
+----
 
 ## issues
 

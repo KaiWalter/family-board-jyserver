@@ -8,22 +8,20 @@ import sys
 
 import jyserver.Flask as jsf
 from flask import (Flask, jsonify, redirect, render_template, request,
-                   send_from_directory, session, url_for)
+                   send_from_directory, url_for)
 from flask_injector import FlaskInjector
 from injector import inject
 
 import app_config
 from board import Board
 from dependencies import configure
-from flask_session import Session
 from google_api import GoogleAuthenication
 from microsoft_graph import MicrosoftGraphAuthentication
 
+# initialize Flask session
 app = Flask(__name__)
-app.config.from_object(app_config)
-Session(app)
 
-
+# Flask app
 @jsf.use(app)
 class App:
     def __init__(self):
@@ -79,8 +77,8 @@ def get_health():
 @inject
 @app.route("/login")
 def login(msg_auth_handler: MicrosoftGraphAuthentication, google_auth_handler: GoogleAuthenication):
-    session["flow"] = msg_auth_handler.build_auth_code_flow()
-    msg_auth_url = session["flow"]["auth_uri"]
+    msg_auth_handler.build_auth_code_flow()
+    msg_auth_url = msg_auth_handler.flow["auth_uri"]
 
     google_auth_url = google_auth_handler.endpoint()
 
@@ -93,7 +91,7 @@ def msg_authorized(msg_auth_handler: MicrosoftGraphAuthentication):
     try:
         cache = msg_auth_handler.load_cache()
         result = msg_auth_handler.build_msal_app(cache=cache).acquire_token_by_auth_code_flow(
-            session.get("flow", {}), request.args)
+            msg_auth_handler.flow, request.args)
         if "error" in result:
             return render_template("error.html", result=result)
         msg_auth_handler.save_cache(cache)

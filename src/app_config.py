@@ -50,7 +50,4 @@ GOOGLE_DISCOVERY_URL = (
 
 GERMAN_STATE = "BW"
 
-# Flask cache settings
-
-SESSION_TYPE = "filesystem"
 
