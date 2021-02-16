@@ -26,7 +26,7 @@ class MicrosoftGraphAuthentication:
             client_credential=app_config.MSG_CLIENT_SECRET, token_cache=cache)
 
     def build_auth_code_flow(self):
-        return self.build_msal_app().initiate_auth_code_flow(
+        self.flow = self.build_msal_app().initiate_auth_code_flow(
             app_config.MSG_SCOPE or [],
             redirect_uri=url_for("msg_authorized", _external=True))
 
