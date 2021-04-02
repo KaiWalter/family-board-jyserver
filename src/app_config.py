@@ -3,7 +3,7 @@ import os
 # general
 
 CALENDAR_TIMEZONE = os.getenv("CALENDAR_TIMEZONE") or "UTC"
-
+STATE_PATH = ".state"
 
 # setting specific for MS Graph (Calendar + OneDrive)
 
@@ -20,7 +20,7 @@ if not MSG_AUTHORITY:
     raise ValueError("Need to define MSG_AUTHORITY environment variable")
 
 MSG_REDIRECT_PATH = "/msgtoken"
-MSG_CACHE_FILE = "msg_token.json"
+MSG_CACHE_FILE = os.path.join(STATE_PATH,"msg_token.json")
 MSG_ENDPOINT_CALENDAR = 'https://graph.microsoft.com/v1.0/me/calendars'
 MSG_ENDPOINT_IMAGES = 'https://graph.microsoft.com/v1.0/me/drive/root:/FamilyCalendarImages:/children?$top=999'
 MSG_SCOPE = ["Calendars.Read", "Files.Read.All"]
@@ -40,7 +40,7 @@ if not GOOGLE_CLIENT_SECRET:
         "Need to define GOOGLE_CLIENT_SECRET environment variable")
 
 GOOGLE_REDIRECT_PATH = "/googletoken"
-GOOGLE_CACHE_FILE = "google_token.pickle"
+GOOGLE_CACHE_FILE = os.path.join(STATE_PATH,"google_token.pickle")
 GOOGLE_SCOPE = ["https://www.googleapis.com/auth/calendar.readonly"]
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"

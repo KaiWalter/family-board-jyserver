@@ -153,6 +153,9 @@ if __name__ == "__main__":
 
         locale.setlocale(locale.LC_ALL, app_config.MSG_LOCALE)
 
+        if not os.path.exists(app_config.STATE_PATH):
+            os.makedirs(app_config.STATE_PATH)
+
         FlaskInjector(app=app, modules=[configure])
 
         # main process
